@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestão de Cobranças</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #eee; min-height: 100vh; }
+
+    header {
+      background: #1a1a1a; padding: 16px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 2px solid #00c853; position: sticky; top: 0; z-index: 100;
+    }
+    header h1 { font-size: 1.2rem; color: #00c853; }
+    header span { font-size: 0.8rem; color: #aaa; }
+
+    .container { max-width: 700px; margin: 0 auto; padding: 16px; }
+
+    .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+    .summary-card { background: #1a1a1a; border-radius: 10px; padding: 14px; text-align: center; border: 1px solid #2a2a2a; }
+    .summary-card .label { font-size: 0.7rem; color: #888; margin-bottom: 4px; }
+    .summary-card .value { font-size: 1.3rem; font-weight: 700; }
+    .summary-card.green .value { color: #00c853; }
+    .summary-card.red .value { color: #ff5252; }
+    .summary-card.yellow .value { color: #ffd600; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer;
+      font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s;
+    }
+    .btn:hover { opacity: 0.85; }
+    .btn-green { background: #00c853; color: #000; }
+    .btn-wpp { background: #25D366; color: #fff; }
+    .btn-red { background: #ff5252; color: #fff; }
+    .btn-gray { background: #333; color: #eee; }
+    .btn-yellow { background: #ffd600; color: #000; }
+    .btn-orange { background: #ff9100; color: #000; }
+    .btn-purple { background: #9c27b0; color: #fff; }
+    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+
+    .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 6px 14px; border-radius: 20px; border: 1px solid #333;
+      background: #1a1a1a; color: #aaa; cursor: pointer; font-size: 0.8rem; transition: all 0.2s;
+    }
+    .filter-btn.active { background: #00c853; color: #000; border-color: #00c853; font-weight: 700; }
+    .filter-btn.danger.active { background: #ff5252; border-color: #ff5252; color: #fff; }
+
+    .client-card {
+      background: #1a1a1a; border-radius: 12px; padding: 14px;
+      margin-bottom: 10px; border-left: 4px solid #333;
+    }
+    .client-card.paid     { border-left-color: #00c853; }
+    .client-card.pending  { border-left-color: #ffd600; }
+    .client-card.nopaid   { border-left-color: #ff5252; }
+    .client-card.finished { border-left-color: #555; opacity: 0.6; }
+
+    .client-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .client-name { font-size: 1rem; font-weight: 700; }
+    .client-status { font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+    .status-paid     { background: #00c85322; color: #00c853; }
+    .status-pending  { background: #ffd60022; color: #ffd600; }
+    .status-nopaid   { background: #ff525222; color: #ff5252; }
+    .status-finished { background: #55555522; color: #888; }
+
+    .multa-badge {
+      background: #9c27b022; color: #ce93d8; border: 1px solid #9c27b044;
+      font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; font-weight: 600;
+      margin-top: 4px; display: inline-block;
+    }
+
+    .client-info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0; }
+    .info-item .label { font-size: 0.65rem; color: #666; margin-bottom: 2px; }
+    .info-item .val { font-size: 0.9rem; font-weight: 600; color: #ddd; }
+    .info-item .val.highlight { color: #00c853; }
+    .info-item .val.danger { color: #ff5252; }
+    .info-item .val.warn { color: #9c27b0; }
+
+    .juros-breakdown {
+      background: #111; border-radius: 8px; padding: 10px 12px;
+      margin-bottom: 10px; font-size: 0.8rem; color: #aaa;
+      display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+    }
+    .juros-breakdown span { white-space: nowrap; }
+    .juros-breakdown .arrow { color: #555; }
+    .juros-breakdown strong { color: #00c853; }
+
+    .progress-bar { background: #333; border-radius: 4px; height: 6px; margin-bottom: 10px; }
+    .progress-fill { height: 100%; border-radius: 4px; background: #00c853; transition: width 0.3s; }
+    .progress-fill.warn { background: #ff9100; }
+
+    .client-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88); z-index: 200;
+      justify-content: center; align-items: flex-start; padding: 16px; overflow-y: auto;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #1a1a1a; border-radius: 16px; padding: 24px;
+      width: 100%; max-width: 460px; border: 1px solid #333; margin: auto;
+    }
+    .modal h2 { margin-bottom: 20px; color: #00c853; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { font-size: 0.8rem; color: #888; display: block; margin-bottom: 4px; }
+    .form-group input, .form-group textarea {
+      width: 100%; background: #111; border: 1px solid #333;
+      color: #eee; padding: 10px; border-radius: 8px; font-size: 0.9rem;
+    }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #00c853; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .modal-calc {
+      background: #111; border-radius: 8px; padding: 14px; margin: 14px 0;
+      font-size: 0.9rem; color: #aaa; line-height: 1.9;
+    }
+    .modal-calc strong { color: #00c853; font-size: 1rem; }
+    .modal-calc .total-line {
+      border-top: 1px solid #333; margin-top: 8px; padding-top: 8px;
+      color: #eee; font-weight: 700;
+    }
+    .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+    .section-divider {
+      font-size: 0.7rem; color: #444; text-transform: uppercase;
+      letter-spacing: 1px; margin: 16px 0 10px; border-bottom: 1px solid #2a2a2a; padding-bottom: 4px;
+    }
+
+    .wpp-list { max-height: 340px; overflow-y: auto; }
+    .wpp-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px; border-bottom: 1px solid #222;
+    }
+    .wpp-item:last-child { border-bottom: none; }
+    .wpp-name { font-size: 0.9rem; font-weight: 600; }
+    .wpp-value { font-size: 0.8rem; color: #aaa; }
+
+    .section-title { font-size: 0.75rem; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; margin-top: 6px; }
+    .empty-state { text-align: center; padding: 40px 20px; color: #555; }
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+
+    .toast {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      padding: 10px 20px; border-radius: 8px; font-weight: 600; z-index: 999;
+      display: none; font-size: 0.9rem; background: #00c853; color: #000;
+    }
+    .toast.warn { background: #ff5252; color: #fff; }
+
+    @media (max-width: 420px) {
+      .summary-card .value { font-size: 1rem; }
+      .client-info { grid-template-columns: repeat(2, 1fr); }
+      .juros-breakdown { font-size: 0.75rem; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>💰 Cobranças</h1>
+  <span id="today-date"></span>
+</header>
+
+<div class="container">
+
+  <div class="summary">
+    <div class="summary-card yellow">
+      <div class="label">Esperado Hoje</div>
+      <div class="value" id="sum-expected">R$0</div>
+    </div>
+    <div class="summary-card green">
+      <div class="label">Recebido</div>
+      <div class="value" id="sum-received">R$0</div>
+    </div>
+    <div class="summary-card red">
+      <div class="label">Pendente</div>
+      <div class="value" id="sum-pending">R$0</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-green" onclick="openAddModal()">➕ Novo Cliente</button>
+    <button class="btn btn-wpp" onclick="openBomDiaModal()">📲 Bom Dia Geral</button>
+    <button class="btn btn-yellow" onclick="openCobrancaModal()">⚠️ Cobrar Pendentes</button>
+    <button class="btn btn-gray" onclick="openSettingsModal()">⚙️ Config</button>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active"  onclick="setFilter('all',this)">Todos</button>
+    <button class="filter-btn"         onclick="setFilter('pending',this)">Pendentes</button>
+    <button class="filter-btn"         onclick="setFilter('paid',this)">Pagos</button>
+    <button class="filter-btn danger"  onclick="setFilter('nopaid',this)">Não Pagos</button>
+    <button class="filter-btn"         onclick="setFilter('finished',this)">Encerrados</button>
+  </div>
+
+  <div class="section-title">Clientes</div>
+  <div id="client-list"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ADD/EDIT CLIENT MODAL -->
+<div class="modal-overlay" id="modal-client">
+  <div class="modal">
+    <h2 id="modal-client-title">Novo Cliente</h2>
+
+    <div class="section-divider">Dados Pessoais</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nome completo</label>
+        <input type="text" id="f-nome" placeholder="Ex: João Silva" />
+      </div>
+      <div class="form-group">
+        <label>WhatsApp (só números)</label>
+        <input type="tel" id="f-phone" placeholder="11987654321" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>CPF</label>
+        <input type="text" id="f-cpf" placeholder="000.000.000-00" maxlength="14" oninput="maskCPF(this)" />
+      </div>
+      <div class="form-group">
+        <label>RG</label>
+        <input type="text" id="f-rg" placeholder="00.000.000-0" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Endereço</label>
+      <input type="text" id="f-endereco" placeholder="Rua, número, bairro, cidade" />
+    </div>
+
+    <div class="section-divider">Dados do Empréstimo</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Valor Emprestado (R$)</label>
+        <input type="number" id="f-principal" placeholder="1000" oninput="calcPreview()" />
+      </div>
+      <div class="form-group">
+        <label>Juros (%)</label>
+        <input type="number" id="f-juros" placeholder="30" oninput="calcPreview()" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Dias para pagar</label>
+        <input type="number" id="f-dias" placeholder="20" oninput="calcPreview()" />
+      </div>
+      <div class="form-group">
+        <label>Data de início</label>
+        <input type="date" id="f-inicio" />
+      </div>
+    </div>
+    <div class="modal-calc" id="calc-preview">Preencha os valores acima para ver o cálculo.</div>
+
+    <input type="hidden" id="f-edit-id" />
+    <div class="modal-actions">
+      <button class="btn btn-gray" onclick="closeModal('modal-client')">Cancelar</button>
+      <button class="btn btn-green" onclick="saveClient()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PARTIAL PAYMENT MODAL -->
+<div class="modal-overlay" id="modal-partial">
+  <div class="modal">
+    <h2>💲 Registrar Pagamento</h2>
+    <div id="partial-client-info" style="background:#111;border-radius:8px;padding:12px;margin-bottom:16px;font-size:0.85rem;color:#aaa;line-height:1.7;"></div>
+    <div class="form-group">
+      <label>Valor recebido (R$)</label>
+      <input type="number" id="partial-valor" placeholder="0,00" step="0.01" min="0.01" />
+    </div>
+    <input type="hidden" id="partial-client-id" />
+    <div class="modal-actions">
+      <button class="btn btn-gray" onclick="closeModal('modal-partial')">Cancelar</button>
+      <button class="btn btn-green" onclick="savePartialPayment()">✅ Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOM DIA MODAL -->
+<div class="modal-overlay" id="modal-bomddia">
+  <div class="modal">
+    <h2>📲 Bom Dia Geral</h2>
+    <p style="font-size:0.85rem;color:#aaa;margin-bottom:14px;">Abra o WhatsApp de cada cliente com a mensagem já preenchida.</p>
+    <div class="wpp-list" id="bomddia-list"></div>
+    <div class="modal-actions">
+      <button class="btn btn-gray" onclick="closeModal('modal-bomddia')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- COBRANÇA MODAL -->
+<div class="modal-overlay" id="modal-cobranca">
+  <div class="modal">
+    <h2>⚠️ Cobrar Pendentes</h2>
+    <p style="font-size:0.85rem;color:#aaa;margin-bottom:14px;">Clientes que ainda não pagaram hoje:</p>
+    <div class="wpp-list" id="cobranca-list"></div>
+    <div class="modal-actions">
+      <button class="btn btn-gray" onclick="closeModal('modal-cobranca')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="modal-settings">
+  <div class="modal">
+    <h2>⚙️ Configurações</h2>
+    <div class="form-group">
+      <label>Chave PIX</label>
+      <input type="text" id="s-pix" />
+    </div>
+    <div class="form-group">
+      <label>Mensagem de Bom Dia</label>
+      <textarea id="s-msg-bomddia" rows="3"></textarea>
+      <small style="color:#555;font-size:0.75rem;">Use {pix}.</small>
+    </div>
+    <div class="form-group">
+      <label>Mensagem de Cobrança</label>
+      <textarea id="s-msg-cobranca" rows="3"></textarea>
+      <small style="color:#555;font-size:0.75rem;">Use {nome}, {parcela}, {restante}, {pix}.</small>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-gray" onclick="closeModal('modal-settings')">Cancelar</button>
+      <button class="btn btn-green" onclick="saveSettings()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────
+let data = JSON.parse(localStorage.getItem('cobrancas') || JSON.stringify({
+  clients: [],
+  settings: {
+    pix: '11968554978',
+    msgBomDia: 'Bom dia a todos, enviem a parcela, chave pix {pix}',
+    msgCobranca: 'Boa tarde {nome}! Ainda não recebi sua parcela de hoje (R$ {parcela}). Chave PIX: {pix}'
+  }
+}));
+function save() { localStorage.setItem('cobrancas', JSON.stringify(data)); }
+
+// ─── UTILS ───────────────────────────────────────────────────────────
+function todayStr() { return new Date().toISOString().split('T')[0]; }
+function formatDate(s) { if (!s) return '-'; const [y,m,d]=s.split('-'); return `${d}/${m}/${y}`; }
+function fm(v) { return 'R$ ' + parseFloat(v||0).toFixed(2).replace('.',','); }
+function maskCPF(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,11);
+  v = v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})\.(\d{3})(\d)/,'$1.$2.$3').replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/,'$1.$2.$3-$4');
+  el.value = v;
+}
+
+// ─── PAYMENT HELPERS ─────────────────────────────────────────────────
+function norm(p, pd) { return typeof p === 'string' ? {data:p, valor:pd} : p; }
+
+function getTotalPaid(c) {
+  return (c.pagamentos||[]).reduce((s,p) => s + norm(p,c.parcelaDiaria).valor, 0);
+}
+function getTodayPaid(c) {
+  const t = todayStr();
+  return (c.pagamentos||[]).map(p=>norm(p,c.parcelaDiaria)).filter(p=>p.data===t).reduce((s,p)=>s+p.valor,0);
+}
+
+// Multas: every 2 faltas = 1 multa = +1 parcela
+function getFaltas(c) { return (c.faltas||[]).length; }
+function getMultas(c)  { return Math.floor(getFaltas(c) / 2); }
+function getEffectiveTotal(c) { return c.totalPagar + getMultas(c) * c.parcelaDiaria; }
+function getEffectiveDias(c)  { return c.dias + getMultas(c); }
+function getRemainingBalance(c){ return Math.max(0, getEffectiveTotal(c) - getTotalPaid(c)); }
+function getCompletedDays(c)  { return Math.floor(getTotalPaid(c) / c.parcelaDiaria); }
+
+function hasPaymentToday(c) { return getTodayPaid(c) > 0.01; }
+function markedNoPaidToday(c){ return (c.faltas||[]).includes(todayStr()); }
+function isFinished(c) { return getTotalPaid(c) >= getEffectiveTotal(c) - 0.01; }
+function isActiveToday(c) {
+  if (!c.ativo || isFinished(c)) return false;
+  return new Date(todayStr()) >= new Date(c.dataInicio);
+}
+
+// ─── SUMMARY ─────────────────────────────────────────────────────────
+function updateSummary() {
+  let expected=0, received=0;
+  data.clients.forEach(c => {
+    if (!isActiveToday(c)) return;
+    expected += c.parcelaDiaria;
+    received += Math.min(getTodayPaid(c), c.parcelaDiaria);
+  });
+  document.getElementById('sum-expected').textContent = fm(expected);
+  document.getElementById('sum-received').textContent = fm(received);
+  document.getElementById('sum-pending').textContent  = fm(expected - received);
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────
+let currentFilter = 'all';
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  renderClients();
+}
+
+function renderClients() {
+  const list = document.getElementById('client-list');
+  let clients = [...data.clients];
+
+  if      (currentFilter==='pending')  clients = clients.filter(c => isActiveToday(c) && !hasPaymentToday(c) && !markedNoPaidToday(c));
+  else if (currentFilter==='paid')     clients = clients.filter(c => isActiveToday(c) && hasPaymentToday(c));
+  else if (currentFilter==='nopaid')   clients = clients.filter(c => isActiveToday(c) && markedNoPaidToday(c) && !hasPaymentToday(c));
+  else if (currentFilter==='finished') clients = clients.filter(c => isFinished(c) || !c.ativo);
+  else                                 clients = clients.filter(c => c.ativo);
+
+  if (!clients.length) {
+    list.innerHTML = `<div class="empty-state"><div class="icon">📭</div><div>Nenhum cliente aqui</div></div>`;
+    return;
+  }
+
+  list.innerHTML = clients.map(c => {
+    const finished   = isFinished(c);
+    const paid       = hasPaymentToday(c);
+    const nopaid     = markedNoPaidToday(c) && !paid;
+    const active     = isActiveToday(c);
+    const todayPaid  = getTodayPaid(c);
+    const completed  = getCompletedDays(c);
+    const effTotal   = getEffectiveTotal(c);
+    const effDias    = getEffectiveDias(c);
+    const multas     = getMultas(c);
+    const faltas     = getFaltas(c);
+    const progress   = Math.min(100, (getTotalPaid(c) / effTotal) * 100).toFixed(0);
+    const remaining  = getRemainingBalance(c);
+    const restHoje   = Math.max(0, c.parcelaDiaria - todayPaid);
+
+    const statusClass = finished ? 'finished' : paid ? 'paid' : nopaid ? 'nopaid' : 'pending';
+    const statusLabel = finished ? '✅ Encerrado'
+      : paid    ? (todayPaid >= c.parcelaDiaria - 0.01 ? '✅ Pago' : `💛 Parcial (${fm(todayPaid)})`)
+      : nopaid  ? '❌ Não Pago'
+      : '⏳ Pendente';
+    const statusBadge = finished ? 'status-finished' : paid ? 'status-paid' : nopaid ? 'status-nopaid' : 'status-pending';
+
+    const wppMsg = data.settings.msgCobranca
+      .replace('{nome}', c.nome)
+      .replace('{parcela}', c.parcelaDiaria.toFixed(2).replace('.',','))
+      .replace('{restante}', restHoje.toFixed(2).replace('.',','))
+      .replace('{pix}', data.settings.pix);
+    const wppLink = `https://wa.me/55${c.telefone}?text=${encodeURIComponent(wppMsg)}`;
+
+    // juros value
+    const jurosValor = c.totalPagar - c.valorPrincipal;
+
+    return `
+    <div class="client-card ${statusClass}">
+      <div class="client-header">
+        <div>
+          <div class="client-name">${c.nome}</div>
+          ${multas > 0 ? `<span class="multa-badge">⚠️ ${multas} multa${multas>1?'s':''} • ${faltas} falta${faltas>1?'s':''}</span>` : ''}
+        </div>
+        <span class="client-status ${statusBadge}">${statusLabel}</span>
+      </div>
+
+      <div class="juros-breakdown">
+        <span>${fm(c.valorPrincipal)}</span>
+        <span class="arrow">+</span>
+        <span>juros ${c.juros}% = <strong>+${fm(jurosValor)}</strong></span>
+        <span class="arrow">→</span>
+        <span>Total: <strong>${fm(c.totalPagar)}</strong>${multas>0?` <span style="color:#9c27b0">+${fm(multas*c.parcelaDiaria)} multas</span>`:''}</span>
+      </div>
+
+      <div class="client-info">
+        <div class="info-item">
+          <div class="label">Parcela diária</div>
+          <div class="val">${fm(c.parcelaDiaria)}</div>
+        </div>
+        <div class="info-item">
+          <div class="label">Dias pagos</div>
+          <div class="val">${completed} / ${effDias}</div>
+        </div>
+        <div class="info-item">
+          <div class="label">Saldo devedor</div>
+          <div class="val ${multas>0?'warn':'danger'}">${fm(remaining)}</div>
+        </div>
+        <div class="info-item">
+          <div class="label">Faltas</div>
+          <div class="val ${faltas>0?'danger':''}">${faltas} ${faltas>0?`(${multas} multa${multas!==1?'s':''})`:''}</div>
+        </div>
+        <div class="info-item">
+          <div class="label">Total c/ juros</div>
+          <div class="val highlight">${fm(effTotal)}</div>
+        </div>
+        <div class="info-item">
+          <div class="label">Início</div>
+          <div class="val">${formatDate(c.dataInicio)}</div>
+        </div>
+      </div>
+
+      <div class="progress-bar">
+        <div class="progress-fill ${multas>0?'warn':''}" style="width:${progress}%"></div>
+      </div>
+
+      <div class="client-actions">
+        ${active && !finished ? `<button class="btn btn-green btn-sm" onclick="openPartialModal('${c.id}')">✅ Pago</button>` : ''}
+        ${active && !paid && !nopaid && !finished ? `<button class="btn btn-red btn-sm" onclick="markNoPaid('${c.id}')">❌ Não Pago</button>` : ''}
+        ${(paid || nopaid) && !finished ? `<button class="btn btn-gray btn-sm" onclick="undoToday('${c.id}')">↩️ Desfazer</button>` : ''}
+        <a class="btn btn-wpp btn-sm" href="${wppLink}" target="_blank">💬 WhatsApp</a>
+        <button class="btn btn-gray btn-sm" onclick="openEditModal('${c.id}')">✏️ Editar</button>
+        <button class="btn btn-red btn-sm" onclick="deleteClient('${c.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function render() { updateSummary(); renderClients(); }
+
+// ─── PAYMENT ACTIONS ─────────────────────────────────────────────────
+function openPartialModal(id) {
+  const c = data.clients.find(x=>x.id===id);
+  if (!c) return;
+  const already = getTodayPaid(c);
+  const rest = Math.max(0, c.parcelaDiaria - already);
+  document.getElementById('partial-client-id').value = id;
+  document.getElementById('partial-valor').value = '';
+  document.getElementById('partial-client-info').innerHTML =
+    `<strong style="color:#eee">${c.nome}</strong><br>
+     Parcela diária: <strong>${fm(c.parcelaDiaria)}</strong><br>
+     ${already>0 ? `Já recebido hoje: <strong style="color:#ff9100">${fm(already)}</strong><br>` : ''}
+     Faltando: <strong style="color:#ff5252">${fm(rest)}</strong>`;
+  openModal('modal-partial');
+}
+
+function savePartialPayment() {
+  const id    = document.getElementById('partial-client-id').value;
+  const valor = parseFloat(document.getElementById('partial-valor').value);
+  const c     = data.clients.find(x=>x.id===id);
+  if (!c || !valor || valor <= 0) { toast('⚠️ Informe um valor válido!', true); return; }
+  if (!c.pagamentos) c.pagamentos = [];
+
+  // Remove any not-paid mark for today if exists
+  c.faltas = (c.faltas||[]).filter(d => d !== todayStr());
+
+  c.pagamentos.push({ data: todayStr(), valor });
+
+  const newTotal = getTodayPaid(c);
+  if (newTotal >= c.parcelaDiaria - 0.01) {
+    toast(`✅ ${c.nome} — parcela completa!`);
+  } else {
+    toast(`💛 ${c.nome} — ${fm(valor)} registrado (parcial)`);
+  }
+  save(); render(); closeModal('modal-partial');
+}
+
+function markNoPaid(id) {
+  const c = data.clients.find(x=>x.id===id);
+  if (!c) return;
+  if (!c.faltas) c.faltas = [];
+  if (!c.faltas.includes(todayStr())) {
+    c.faltas.push(todayStr());
+    const multas = getMultas(c);
+    const faltas = getFaltas(c);
+    const newMulta = faltas % 2 === 0;
+    if (newMulta) {
+      toast(`⚠️ ${c.nome} — ${faltas} faltas = MULTA! +1 parcela`, true);
+    } else {
+      toast(`❌ ${c.nome} — falta registrada (${faltas}/2 para multa)`, true);
+    }
+  }
+  save(); render();
+}
+
+function undoToday(id) {
+  const c = data.clients.find(x=>x.id===id);
+  if (!c) return;
+  c.pagamentos = (c.pagamentos||[]).filter(p => norm(p,c.parcelaDiaria).data !== todayStr());
+  c.faltas = (c.faltas||[]).filter(d => d !== todayStr());
+  save(); render(); toast(`↩️ Ação de hoje de ${c.nome} desfeita`);
+}
+
+// ─── ADD/EDIT ─────────────────────────────────────────────────────────
+function openAddModal() {
+  document.getElementById('modal-client-title').textContent = 'Novo Cliente';
+  ['f-nome','f-phone','f-cpf','f-rg','f-endereco','f-principal','f-juros','f-dias','f-edit-id'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('f-inicio').value = todayStr();
+  document.getElementById('calc-preview').innerHTML = 'Preencha os valores acima para ver o cálculo.';
+  openModal('modal-client');
+}
+
+function openEditModal(id) {
+  const c = data.clients.find(x=>x.id===id);
+  if (!c) return;
+  document.getElementById('modal-client-title').textContent = 'Editar Cliente';
+  document.getElementById('f-nome').value     = c.nome;
+  document.getElementById('f-phone').value    = c.telefone;
+  document.getElementById('f-cpf').value      = c.cpf||'';
+  document.getElementById('f-rg').value       = c.rg||'';
+  document.getElementById('f-endereco').value = c.endereco||'';
+  document.getElementById('f-principal').value= c.valorPrincipal;
+  document.getElementById('f-juros').value    = c.juros;
+  document.getElementById('f-dias').value     = c.dias;
+  document.getElementById('f-inicio').value   = c.dataInicio;
+  document.getElementById('f-edit-id').value  = c.id;
+  calcPreview();
+  openModal('modal-client');
+}
+
+function calcPreview() {
+  const p = parseFloat(document.getElementById('f-principal').value)||0;
+  const j = parseFloat(document.getElementById('f-juros').value)||0;
+  const d = parseInt(document.getElementById('f-dias').value)||0;
+  if (!p||!j||!d) { document.getElementById('calc-preview').innerHTML='Preencha os valores acima para ver o cálculo.'; return; }
+  const jurosVal = p * (j/100);
+  const total    = p + jurosVal;
+  const parcela  = total / d;
+  document.getElementById('calc-preview').innerHTML =
+    `Emprestado: <strong>${fm(p)}</strong><br>
+     + Juros ${j}%: <strong>+${fm(jurosVal)}</strong><br>
+     <div class="total-line">= Total a receber: <strong>${fm(total)}</strong></div>
+     Parcela diária: <strong>${fm(parcela)}</strong> × ${d} dias`;
+}
+
+function saveClient() {
+  const nome         = document.getElementById('f-nome').value.trim();
+  const telefone     = document.getElementById('f-phone').value.replace(/\D/g,'');
+  const cpf          = document.getElementById('f-cpf').value.trim();
+  const rg           = document.getElementById('f-rg').value.trim();
+  const endereco     = document.getElementById('f-endereco').value.trim();
+  const valorPrincipal = parseFloat(document.getElementById('f-principal').value);
+  const juros        = parseFloat(document.getElementById('f-juros').value);
+  const dias         = parseInt(document.getElementById('f-dias').value);
+  const dataInicio   = document.getElementById('f-inicio').value;
+  const editId       = document.getElementById('f-edit-id').value;
+
+  if (!nome||!telefone||!valorPrincipal||!juros||!dias||!dataInicio) {
+    toast('⚠️ Preencha nome, WhatsApp e dados do empréstimo!', true); return;
+  }
+  const totalPagar    = valorPrincipal * (1 + juros/100);
+  const parcelaDiaria = totalPagar / dias;
+
+  if (editId) {
+    const c = data.clients.find(x=>x.id===editId);
+    if (c) Object.assign(c, {nome,telefone,cpf,rg,endereco,valorPrincipal,juros,dias,dataInicio,totalPagar,parcelaDiaria});
+  } else {
+    data.clients.push({ id:Date.now().toString(), nome,telefone,cpf,rg,endereco,valorPrincipal,juros,dias,dataInicio,totalPagar,parcelaDiaria,pagamentos:[],faltas:[],ativo:true });
+  }
+  save(); render(); closeModal('modal-client');
+  toast(editId?`✅ ${nome} atualizado!`:`✅ ${nome} cadastrado!`);
+}
+
+// ─── BOM DIA ─────────────────────────────────────────────────────────
+function openBomDiaModal() {
+  const msg = data.settings.msgBomDia.replace('{pix}',data.settings.pix);
+  const active = data.clients.filter(c=>isActiveToday(c));
+  document.getElementById('bomddia-list').innerHTML =
+    `<div style="background:#111;border-radius:8px;padding:12px;margin-bottom:12px;font-size:0.85rem;color:#aaa;">
+      <strong style="color:#25D366">Mensagem:</strong><br>"${msg}"
+    </div>` +
+    (active.length===0 ? '<p style="color:#555;text-align:center;padding:20px">Nenhum cliente ativo</p>' :
+    active.map(c => {
+      const link = `https://wa.me/55${c.telefone}?text=${encodeURIComponent(msg)}`;
+      return `<div class="wpp-item">
+        <div><div class="wpp-name">${c.nome}</div><div class="wpp-value">${fm(c.parcelaDiaria)}/dia</div></div>
+        <a class="btn btn-wpp btn-sm" href="${link}" target="_blank">💬 Abrir</a>
+      </div>`;
+    }).join(''));
+  openModal('modal-bomddia');
+}
+
+// ─── COBRANÇA ────────────────────────────────────────────────────────
+function openCobrancaModal() {
+  const pending = data.clients.filter(c=>isActiveToday(c)&&!hasPaymentToday(c));
+  document.getElementById('cobranca-list').innerHTML =
+    pending.length===0
+      ? '<p style="color:#00c853;text-align:center;padding:20px">🎉 Todos pagaram hoje!</p>'
+      : pending.map(c => {
+          const rest = Math.max(0, c.parcelaDiaria - getTodayPaid(c));
+          const msg = data.settings.msgCobranca
+            .replace('{nome}',c.nome)
+            .replace('{parcela}',c.parcelaDiaria.toFixed(2).replace('.',','))
+            .replace('{restante}',rest.toFixed(2).replace('.',','))
+            .replace('{pix}',data.settings.pix);
+          const link = `https://wa.me/55${c.telefone}?text=${encodeURIComponent(msg)}`;
+          return `<div class="wpp-item">
+            <div><div class="wpp-name">${c.nome}</div><div class="wpp-value">${fm(c.parcelaDiaria)} pendente</div></div>
+            <a class="btn btn-wpp btn-sm" href="${link}" target="_blank">💬 Cobrar</a>
+          </div>`;
+        }).join('');
+  openModal('modal-cobranca');
+}
+
+// ─── SETTINGS ────────────────────────────────────────────────────────
+function openSettingsModal() {
+  document.getElementById('s-pix').value          = data.settings.pix;
+  document.getElementById('s-msg-bomddia').value  = data.settings.msgBomDia;
+  document.getElementById('s-msg-cobranca').value = data.settings.msgCobranca;
+  openModal('modal-settings');
+}
+function saveSettings() {
+  data.settings.pix          = document.getElementById('s-pix').value.trim();
+  data.settings.msgBomDia    = document.getElementById('s-msg-bomddia').value.trim();
+  data.settings.msgCobranca  = document.getElementById('s-msg-cobranca').value.trim();
+  save(); closeModal('modal-settings'); toast('✅ Configurações salvas!');
+}
+
+// ─── DELETE ──────────────────────────────────────────────────────────
+function deleteClient(id) {
+  const c = data.clients.find(x=>x.id===id);
+  if (!confirm(`Remover ${c?.nome||'este cliente'}?`)) return;
+  data.clients = data.clients.filter(x=>x.id!==id);
+  save(); render(); toast('🗑️ Cliente removido');
+}
+
+// ─── MODAL UTILS ─────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }));
+
+function toast(msg, warn=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (warn?' warn':'');
+  t.style.display = 'block';
+  setTimeout(()=>t.style.display='none', 3000);
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────
+document.getElementById('today-date').textContent = new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});
+render();
+</script>
+</body>
+</html>
