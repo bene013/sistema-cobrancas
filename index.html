@@ -8,49 +8,129 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', sans-serif; background: #0f0f0f; color: #eee; min-height: 100vh; }
 
+    /* ── SCREENS ── */
+    .screen { display: none; min-height: 100vh; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* ── AUTH SCREENS ── */
+    .auth-wrap {
+      flex: 1; display: flex; justify-content: center; align-items: center; padding: 24px;
+    }
+    .auth-box {
+      background: #1a1a1a; border-radius: 18px; padding: 36px 28px;
+      width: 100%; max-width: 380px; border: 1px solid #2a2a2a;
+    }
+    .auth-logo { text-align: center; margin-bottom: 28px; }
+    .auth-logo .icon { font-size: 3rem; }
+    .auth-logo h1 { font-size: 1.4rem; color: #00c853; margin-top: 8px; }
+    .auth-logo p  { font-size: 0.8rem; color: #555; margin-top: 4px; }
+    .auth-box .form-group { margin-bottom: 16px; }
+    .auth-box label { font-size: 0.8rem; color: #888; display: block; margin-bottom: 6px; }
+    .auth-box input {
+      width: 100%; background: #111; border: 1px solid #333;
+      color: #eee; padding: 12px 14px; border-radius: 10px; font-size: 1rem;
+    }
+    .auth-box input:focus { outline: none; border-color: #00c853; }
+    .auth-btn {
+      width: 100%; padding: 13px; background: #00c853; color: #000;
+      border: none; border-radius: 10px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; margin-top: 4px; transition: opacity 0.2s;
+    }
+    .auth-btn:hover { opacity: 0.85; }
+    .auth-link { text-align: center; margin-top: 14px; font-size: 0.8rem; color: #555; }
+    .auth-link a { color: #00c853; cursor: pointer; }
+    .auth-error {
+      background: #ff525222; border: 1px solid #ff525244; border-radius: 8px;
+      padding: 8px 12px; font-size: 0.85rem; color: #ff5252; margin-bottom: 14px; display: none;
+    }
+
+    /* ── APP HEADER ── */
     header {
-      background: #1a1a1a; padding: 16px 20px;
+      background: #1a1a1a; padding: 12px 16px;
       display: flex; justify-content: space-between; align-items: center;
       border-bottom: 2px solid #00c853; position: sticky; top: 0; z-index: 100;
     }
-    header h1 { font-size: 1.2rem; color: #00c853; }
-    header span { font-size: 0.8rem; color: #aaa; }
+    header h1 { font-size: 1.1rem; color: #00c853; }
+    .header-right { display: flex; gap: 8px; align-items: center; }
+    .header-right span { font-size: 0.75rem; color: #aaa; }
+    .btn-icon {
+      background: #222; border: 1px solid #333; color: #aaa;
+      padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .btn-icon:hover { background: #333; }
 
-    .container { max-width: 700px; margin: 0 auto; padding: 16px; }
+    /* ── CONTAINER ── */
+    .container { max-width: 700px; margin: 0 auto; padding: 14px 16px; }
 
-    .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-    .summary-card { background: #1a1a1a; border-radius: 10px; padding: 14px; text-align: center; border: 1px solid #2a2a2a; }
-    .summary-card .label { font-size: 0.7rem; color: #888; margin-bottom: 4px; }
-    .summary-card .value { font-size: 1.3rem; font-weight: 700; }
+    /* ── SUMMARY ── */
+    .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+    .summary-card { background: #1a1a1a; border-radius: 10px; padding: 12px; text-align: center; border: 1px solid #2a2a2a; }
+    .summary-card .label { font-size: 0.65rem; color: #888; margin-bottom: 4px; }
+    .summary-card .value { font-size: 1.2rem; font-weight: 700; }
     .summary-card.green .value { color: #00c853; }
-    .summary-card.red .value { color: #ff5252; }
+    .summary-card.red   .value { color: #ff5252; }
     .summary-card.yellow .value { color: #ffd600; }
 
+    /* ── MULTA ALERT ── */
+    .multa-alert {
+      background: #9c27b011; border: 1px solid #9c27b044; border-radius: 10px;
+      padding: 10px 14px; margin-bottom: 14px; font-size: 0.85rem; color: #ce93d8;
+      display: none; cursor: pointer; transition: background 0.2s;
+    }
+    .multa-alert:hover { background: #9c27b022; }
+    .multa-alert.show { display: block; }
+
+    /* ── BUTTONS ── */
     .btn {
       display: inline-flex; align-items: center; gap: 6px;
       padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer;
       font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: opacity 0.2s;
     }
     .btn:hover { opacity: 0.85; }
-    .btn-green { background: #00c853; color: #000; }
-    .btn-wpp { background: #25D366; color: #fff; }
-    .btn-red { background: #ff5252; color: #fff; }
-    .btn-gray { background: #333; color: #eee; }
+    .btn-green  { background: #00c853; color: #000; }
+    .btn-wpp    { background: #25D366; color: #fff; }
+    .btn-red    { background: #ff5252; color: #fff; }
+    .btn-gray   { background: #333; color: #eee; }
     .btn-yellow { background: #ffd600; color: #000; }
     .btn-orange { background: #ff9100; color: #000; }
     .btn-purple { background: #9c27b0; color: #fff; }
-    .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+    .btn-blue   { background: #2196f3; color: #fff; }
+    .btn-sm     { padding: 6px 12px; font-size: 0.8rem; }
 
-    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
 
-    .filter-bar { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    /* ── SEARCH ── */
+    .search-bar {
+      position: relative; margin-bottom: 12px;
+    }
+    .search-bar input {
+      width: 100%; background: #1a1a1a; border: 1px solid #2a2a2a;
+      color: #eee; padding: 10px 14px 10px 38px; border-radius: 10px; font-size: 0.9rem;
+    }
+    .search-bar input:focus { outline: none; border-color: #00c853; }
+    .search-bar .search-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: #555; font-size: 0.9rem; pointer-events: none;
+    }
+    .search-bar .search-clear {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      color: #555; font-size: 0.9rem; cursor: pointer; display: none;
+    }
+    .search-bar.has-value .search-clear { display: block; }
+
+    /* ── FILTER ── */
+    .filter-bar { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; overflow-x: auto; padding-bottom: 2px; }
     .filter-btn {
-      padding: 6px 14px; border-radius: 20px; border: 1px solid #333;
-      background: #1a1a1a; color: #aaa; cursor: pointer; font-size: 0.8rem; transition: all 0.2s;
+      padding: 6px 13px; border-radius: 20px; border: 1px solid #333;
+      background: #1a1a1a; color: #aaa; cursor: pointer; font-size: 0.78rem;
+      transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
     }
     .filter-btn.active { background: #00c853; color: #000; border-color: #00c853; font-weight: 700; }
     .filter-btn.danger.active { background: #ff5252; border-color: #ff5252; color: #fff; }
+    .filter-btn.purple.active { background: #9c27b0; border-color: #9c27b0; color: #fff; }
 
+    /* ── CLIENT CARD ── */
     .client-card {
       background: #1a1a1a; border-radius: 12px; padding: 14px;
       margin-bottom: 10px; border-left: 4px solid #333;
@@ -60,9 +140,13 @@
     .client-card.nopaid   { border-left-color: #ff5252; }
     .client-card.finished { border-left-color: #555; opacity: 0.6; }
 
-    .client-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .client-name { font-size: 1rem; font-weight: 700; }
-    .client-status { font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+    .client-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .client-name {
+      font-size: 1rem; font-weight: 700; color: #eee;
+      cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+    }
+    .client-name:hover { color: #00c853; }
+    .client-status { font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; flex-shrink: 0; }
     .status-paid     { background: #00c85322; color: #00c853; }
     .status-pending  { background: #ffd60022; color: #ffd600; }
     .status-nopaid   { background: #ff525222; color: #ff5252; }
@@ -70,21 +154,21 @@
 
     .multa-badge {
       background: #9c27b022; color: #ce93d8; border: 1px solid #9c27b044;
-      font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; font-weight: 600;
+      font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; font-weight: 600;
       margin-top: 4px; display: inline-block;
     }
 
     .client-info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0; }
-    .info-item .label { font-size: 0.65rem; color: #666; margin-bottom: 2px; }
-    .info-item .val { font-size: 0.9rem; font-weight: 600; color: #ddd; }
+    .info-item .label { font-size: 0.62rem; color: #666; margin-bottom: 2px; }
+    .info-item .val { font-size: 0.88rem; font-weight: 600; color: #ddd; }
     .info-item .val.highlight { color: #00c853; }
     .info-item .val.danger { color: #ff5252; }
     .info-item .val.warn { color: #9c27b0; }
 
     .juros-breakdown {
       background: #111; border-radius: 8px; padding: 10px 12px;
-      margin-bottom: 10px; font-size: 0.8rem; color: #aaa;
-      display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+      margin-bottom: 10px; font-size: 0.78rem; color: #aaa;
+      display: flex; gap: 14px; flex-wrap: wrap; align-items: center;
     }
     .juros-breakdown span { white-space: nowrap; }
     .juros-breakdown .arrow { color: #555; }
@@ -96,7 +180,55 @@
 
     .client-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-    /* MODAL */
+    /* ── ADMIN SCREEN ── */
+    #screen-admin { background: #0f0f0f; }
+    .admin-header {
+      background: #1a1a1a; padding: 12px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 2px solid #9c27b0; position: sticky; top: 0; z-index: 100;
+    }
+    .admin-header h1 { font-size: 1.1rem; color: #ce93d8; }
+
+    .admin-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+    .admin-card {
+      background: #1a1a1a; border-radius: 10px; padding: 14px;
+      border: 1px solid #2a2a2a; text-align: center;
+    }
+    .admin-card .a-label { font-size: 0.65rem; color: #888; margin-bottom: 4px; }
+    .admin-card .a-value { font-size: 1.2rem; font-weight: 700; }
+    .admin-card.green  .a-value { color: #00c853; }
+    .admin-card.red    .a-value { color: #ff5252; }
+    .admin-card.yellow .a-value { color: #ffd600; }
+    .admin-card.purple .a-value { color: #ce93d8; }
+    .admin-card.blue   .a-value { color: #64b5f6; }
+    .admin-card.orange .a-value { color: #ff9100; }
+
+    .admin-section { margin-bottom: 24px; }
+    .admin-section-title {
+      font-size: 0.75rem; color: #555; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 12px; border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 6px;
+    }
+
+    .expense-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 12px; background: #1a1a1a; border-radius: 8px;
+      margin-bottom: 6px; border: 1px solid #2a2a2a;
+    }
+    .expense-info .e-desc { font-size: 0.9rem; font-weight: 600; }
+    .expense-info .e-date { font-size: 0.72rem; color: #666; margin-top: 2px; }
+    .expense-right { display: flex; align-items: center; gap: 10px; }
+    .expense-val { font-size: 1rem; font-weight: 700; color: #ff5252; }
+
+    .month-filter { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; flex-wrap: wrap; }
+    .month-filter label { font-size: 0.8rem; color: #888; }
+    .month-filter input {
+      background: #1a1a1a; border: 1px solid #333; color: #eee;
+      padding: 6px 10px; border-radius: 8px; font-size: 0.85rem;
+    }
+    .month-filter input:focus { outline: none; border-color: #9c27b0; }
+
+    /* ── MODAL ── */
     .modal-overlay {
       display: none; position: fixed; inset: 0;
       background: rgba(0,0,0,0.88); z-index: 200;
@@ -107,20 +239,20 @@
       background: #1a1a1a; border-radius: 16px; padding: 24px;
       width: 100%; max-width: 460px; border: 1px solid #333; margin: auto;
     }
-    .modal h2 { margin-bottom: 20px; color: #00c853; }
+    .modal h2 { margin-bottom: 18px; color: #00c853; }
     .form-group { margin-bottom: 14px; }
     .form-group label { font-size: 0.8rem; color: #888; display: block; margin-bottom: 4px; }
-    .form-group input, .form-group textarea {
+    .form-group input, .form-group textarea, .form-group select {
       width: 100%; background: #111; border: 1px solid #333;
       color: #eee; padding: 10px; border-radius: 8px; font-size: 0.9rem;
     }
-    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #00c853; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #00c853; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .modal-calc {
       background: #111; border-radius: 8px; padding: 14px; margin: 14px 0;
-      font-size: 0.9rem; color: #aaa; line-height: 1.9;
+      font-size: 0.88rem; color: #aaa; line-height: 1.9;
     }
-    .modal-calc strong { color: #00c853; font-size: 1rem; }
+    .modal-calc strong { color: #00c853; font-size: 0.95rem; }
     .modal-calc .total-line {
       border-top: 1px solid #333; margin-top: 8px; padding-top: 8px;
       color: #eee; font-weight: 700;
@@ -131,79 +263,225 @@
       letter-spacing: 1px; margin: 16px 0 10px; border-bottom: 1px solid #2a2a2a; padding-bottom: 4px;
     }
 
-    .wpp-list { max-height: 340px; overflow-y: auto; }
+    /* ── HISTORY MODAL ── */
+    .history-list { max-height: 360px; overflow-y: auto; }
+    .hist-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 9px 0; border-bottom: 1px solid #222;
+    }
+    .hist-item:last-child { border-bottom: none; }
+    .hist-date { font-size: 0.82rem; color: #888; }
+    .hist-val  { font-size: 0.9rem; font-weight: 700; }
+    .hist-val.paid   { color: #00c853; }
+    .hist-val.falta  { color: #ff5252; }
+    .hist-val.multa  { color: #ce93d8; }
+    .hist-tag {
+      font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; margin-left: 8px;
+    }
+    .hist-summary {
+      background: #111; border-radius: 8px; padding: 12px 14px;
+      margin-bottom: 14px; font-size: 0.82rem; color: #aaa; line-height: 1.8;
+    }
+
+    /* ── WPP LIST ── */
+    .wpp-list { max-height: 320px; overflow-y: auto; }
     .wpp-item {
       display: flex; justify-content: space-between; align-items: center;
       padding: 10px; border-bottom: 1px solid #222;
     }
     .wpp-item:last-child { border-bottom: none; }
-    .wpp-name { font-size: 0.9rem; font-weight: 600; }
+    .wpp-name  { font-size: 0.9rem; font-weight: 600; }
     .wpp-value { font-size: 0.8rem; color: #aaa; }
 
-    .section-title { font-size: 0.75rem; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; margin-top: 6px; }
-    .empty-state { text-align: center; padding: 40px 20px; color: #555; }
-    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+    .section-title { font-size: 0.72rem; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; margin-top: 4px; }
+    .empty-state { text-align: center; padding: 36px 20px; color: #555; }
+    .empty-state .icon { font-size: 2.8rem; margin-bottom: 10px; }
 
+    /* ── TOAST ── */
     .toast {
       position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
       padding: 10px 20px; border-radius: 8px; font-weight: 600; z-index: 999;
       display: none; font-size: 0.9rem; background: #00c853; color: #000;
+      max-width: 90%; text-align: center;
     }
     .toast.warn { background: #ff5252; color: #fff; }
 
     @media (max-width: 420px) {
       .summary-card .value { font-size: 1rem; }
       .client-info { grid-template-columns: repeat(2, 1fr); }
-      .juros-breakdown { font-size: 0.75rem; gap: 8px; }
+      .juros-breakdown { font-size: 0.72rem; gap: 8px; }
+      .admin-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>💰 Cobranças</h1>
-  <span id="today-date"></span>
-</header>
-
-<div class="container">
-
-  <div class="summary">
-    <div class="summary-card yellow">
-      <div class="label">Esperado Hoje</div>
-      <div class="value" id="sum-expected">R$0</div>
-    </div>
-    <div class="summary-card green">
-      <div class="label">Recebido</div>
-      <div class="value" id="sum-received">R$0</div>
-    </div>
-    <div class="summary-card red">
-      <div class="label">Pendente</div>
-      <div class="value" id="sum-pending">R$0</div>
+<!-- ════════════════════════════════════════════════════
+     SCREEN: SETUP (primeira vez)
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-setup">
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="auth-logo">
+        <div class="icon">💰</div>
+        <h1>Gestão de Cobranças</h1>
+        <p>Crie sua senha para começar</p>
+      </div>
+      <div class="auth-error" id="setup-err"></div>
+      <div class="form-group">
+        <label>Nova senha</label>
+        <input type="password" id="setup-pw1" placeholder="Mínimo 4 dígitos" onkeydown="if(event.key==='Enter')doSetup()" />
+      </div>
+      <div class="form-group">
+        <label>Confirmar senha</label>
+        <input type="password" id="setup-pw2" placeholder="Repita a senha" onkeydown="if(event.key==='Enter')doSetup()" />
+      </div>
+      <div class="form-group" style="margin-top:6px;">
+        <label>Senha do painel administrativo</label>
+        <input type="password" id="setup-admin" placeholder="Senha para área admin" onkeydown="if(event.key==='Enter')doSetup()" />
+      </div>
+      <button class="auth-btn" onclick="doSetup()">Criar conta</button>
     </div>
   </div>
-
-  <div class="actions">
-    <button class="btn btn-green" onclick="openAddModal()">➕ Novo Cliente</button>
-    <button class="btn btn-wpp" onclick="openBomDiaModal()">📲 Bom Dia Geral</button>
-    <button class="btn btn-yellow" onclick="openCobrancaModal()">⚠️ Cobrar Pendentes</button>
-    <button class="btn btn-gray" onclick="openSettingsModal()">⚙️ Config</button>
-  </div>
-
-  <div class="filter-bar">
-    <button class="filter-btn active"  onclick="setFilter('all',this)">Todos</button>
-    <button class="filter-btn"         onclick="setFilter('pending',this)">Pendentes</button>
-    <button class="filter-btn"         onclick="setFilter('paid',this)">Pagos</button>
-    <button class="filter-btn danger"  onclick="setFilter('nopaid',this)">Não Pagos</button>
-    <button class="filter-btn"         onclick="setFilter('finished',this)">Encerrados</button>
-  </div>
-
-  <div class="section-title">Clientes</div>
-  <div id="client-list"></div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- ════════════════════════════════════════════════════
+     SCREEN: LOGIN
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-login">
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="auth-logo">
+        <div class="icon">💰</div>
+        <h1>Gestão de Cobranças</h1>
+        <p>Entre com sua senha</p>
+      </div>
+      <div class="auth-error" id="login-err"></div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="login-pw" placeholder="Sua senha" onkeydown="if(event.key==='Enter')doLogin()" />
+      </div>
+      <button class="auth-btn" onclick="doLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
 
-<!-- ADD/EDIT CLIENT MODAL -->
+<!-- ════════════════════════════════════════════════════
+     SCREEN: APP PRINCIPAL
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-app">
+  <header>
+    <h1>💰 Cobranças</h1>
+    <div class="header-right">
+      <span id="today-date"></span>
+      <button class="btn-icon" onclick="showAdmin()" title="Admin">🔐</button>
+      <button class="btn-icon" onclick="doLogout()" title="Sair">🚪</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="summary">
+      <div class="summary-card yellow">
+        <div class="label">Esperado Hoje</div>
+        <div class="value" id="sum-expected">R$0</div>
+      </div>
+      <div class="summary-card green">
+        <div class="label">Recebido</div>
+        <div class="value" id="sum-received">R$0</div>
+      </div>
+      <div class="summary-card red">
+        <div class="label">Pendente</div>
+        <div class="value" id="sum-pending">R$0</div>
+      </div>
+    </div>
+
+    <div class="multa-alert" id="multa-alert" onclick="setFilter('multa', document.querySelector('.filter-btn.purple'))">
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-green" onclick="openAddModal()">➕ Novo Cliente</button>
+      <button class="btn btn-wpp"   onclick="openBomDiaModal()">📲 Bom Dia</button>
+      <button class="btn btn-yellow" onclick="openCobrancaModal()">⚠️ Cobrar</button>
+      <button class="btn btn-gray"  onclick="openSettingsModal()">⚙️ Config</button>
+    </div>
+
+    <div class="search-bar" id="search-bar">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Buscar cliente..." oninput="onSearch(this)" />
+      <span class="search-clear" onclick="clearSearch()">✕</span>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active"  onclick="setFilter('all',this)">Todos</button>
+      <button class="filter-btn"         onclick="setFilter('pending',this)">Pendentes</button>
+      <button class="filter-btn"         onclick="setFilter('paid',this)">Pagos</button>
+      <button class="filter-btn danger"  onclick="setFilter('nopaid',this)">Não Pagos</button>
+      <button class="filter-btn purple"  onclick="setFilter('multa',this)">Com Multa</button>
+      <button class="filter-btn"         onclick="setFilter('finished',this)">Encerrados</button>
+    </div>
+
+    <div class="section-title">Clientes</div>
+    <div id="client-list"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     SCREEN: ADMIN
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-admin">
+  <div class="admin-header">
+    <h1>🔐 Painel Administrativo</h1>
+    <button class="btn-icon" onclick="showApp()" style="color:#ce93d8;border-color:#9c27b044;">← Voltar</button>
+  </div>
+
+  <div class="container">
+
+    <div class="admin-section">
+      <div class="admin-section-title">💼 Financeiro Geral</div>
+      <div class="admin-grid" id="admin-fin-grid"></div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-title">📊 Carteira</div>
+      <div class="admin-grid" id="admin-portfolio-grid"></div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-title">
+        💸 Despesas
+        <button class="btn btn-sm btn-red" style="margin-left:12px;float:right;" onclick="openExpenseModal()">+ Adicionar</button>
+      </div>
+      <div class="month-filter">
+        <label>Mês:</label>
+        <input type="month" id="expense-month-filter" oninput="renderExpenses()" />
+      </div>
+      <div id="expense-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     MODALS
+════════════════════════════════════════════════════ -->
+
+<!-- Admin login -->
+<div class="modal-overlay" id="modal-admin-login">
+  <div class="modal" style="max-width:360px;">
+    <h2 style="color:#ce93d8;">🔐 Área Admin</h2>
+    <div class="auth-error" id="admin-login-err"></div>
+    <div class="form-group">
+      <label>Senha administrativa</label>
+      <input type="password" id="admin-login-pw" placeholder="Senha admin" onkeydown="if(event.key==='Enter')doAdminLogin()" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-gray" onclick="closeModal('modal-admin-login')">Cancelar</button>
+      <button class="btn btn-purple" onclick="doAdminLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Client -->
 <div class="modal-overlay" id="modal-client">
   <div class="modal">
     <h2 id="modal-client-title">Novo Cliente</h2>
@@ -231,7 +509,7 @@
     </div>
     <div class="form-group">
       <label>Endereço</label>
-      <input type="text" id="f-endereco" placeholder="Rua, número, bairro, cidade" />
+      <input type="text" id="f-endereco" placeholder="Rua, número, bairro" />
     </div>
 
     <div class="section-divider">Dados do Empréstimo</div>
@@ -255,38 +533,38 @@
         <input type="date" id="f-inicio" />
       </div>
     </div>
-    <div class="modal-calc" id="calc-preview">Preencha os valores acima para ver o cálculo.</div>
-
+    <div class="modal-calc" id="calc-preview">Preencha os valores para ver o cálculo.</div>
     <input type="hidden" id="f-edit-id" />
     <div class="modal-actions">
-      <button class="btn btn-gray" onclick="closeModal('modal-client')">Cancelar</button>
+      <button class="btn btn-gray"  onclick="closeModal('modal-client')">Cancelar</button>
       <button class="btn btn-green" onclick="saveClient()">Salvar</button>
     </div>
   </div>
 </div>
 
-<!-- PARTIAL PAYMENT MODAL -->
+<!-- Partial Payment -->
 <div class="modal-overlay" id="modal-partial">
   <div class="modal">
     <h2>💲 Registrar Pagamento</h2>
     <div id="partial-client-info" style="background:#111;border-radius:8px;padding:12px;margin-bottom:16px;font-size:0.85rem;color:#aaa;line-height:1.7;"></div>
     <div class="form-group">
       <label>Valor recebido (R$)</label>
-      <input type="number" id="partial-valor" placeholder="0,00" step="0.01" min="0.01" />
+      <input type="number" id="partial-valor" placeholder="0,00" step="0.01" min="0.01"
+             onkeydown="if(event.key==='Enter')savePartialPayment()" />
     </div>
     <input type="hidden" id="partial-client-id" />
     <div class="modal-actions">
-      <button class="btn btn-gray" onclick="closeModal('modal-partial')">Cancelar</button>
+      <button class="btn btn-gray"  onclick="closeModal('modal-partial')">Cancelar</button>
       <button class="btn btn-green" onclick="savePartialPayment()">✅ Registrar</button>
     </div>
   </div>
 </div>
 
-<!-- BOM DIA MODAL -->
+<!-- Bom Dia -->
 <div class="modal-overlay" id="modal-bomddia">
   <div class="modal">
     <h2>📲 Bom Dia Geral</h2>
-    <p style="font-size:0.85rem;color:#aaa;margin-bottom:14px;">Abra o WhatsApp de cada cliente com a mensagem já preenchida.</p>
+    <p style="font-size:0.83rem;color:#aaa;margin-bottom:14px;">Abra o WhatsApp de cada cliente com a mensagem preenchida.</p>
     <div class="wpp-list" id="bomddia-list"></div>
     <div class="modal-actions">
       <button class="btn btn-gray" onclick="closeModal('modal-bomddia')">Fechar</button>
@@ -294,11 +572,11 @@
   </div>
 </div>
 
-<!-- COBRANÇA MODAL -->
+<!-- Cobrança -->
 <div class="modal-overlay" id="modal-cobranca">
   <div class="modal">
     <h2>⚠️ Cobrar Pendentes</h2>
-    <p style="font-size:0.85rem;color:#aaa;margin-bottom:14px;">Clientes que ainda não pagaram hoje:</p>
+    <p style="font-size:0.83rem;color:#aaa;margin-bottom:14px;">Clientes que ainda não pagaram hoje:</p>
     <div class="wpp-list" id="cobranca-list"></div>
     <div class="modal-actions">
       <button class="btn btn-gray" onclick="closeModal('modal-cobranca')">Fechar</button>
@@ -306,7 +584,22 @@
   </div>
 </div>
 
-<!-- SETTINGS MODAL -->
+<!-- Histórico do cliente -->
+<div class="modal-overlay" id="modal-history">
+  <div class="modal">
+    <h2 id="history-title">📋 Histórico</h2>
+    <div class="hist-summary" id="history-summary"></div>
+    <div class="section-divider">Pagamentos</div>
+    <div class="history-list" id="history-payments"></div>
+    <div class="section-divider" style="margin-top:12px;">Faltas & Multas</div>
+    <div class="history-list" id="history-faltas"></div>
+    <div class="modal-actions">
+      <button class="btn btn-gray" onclick="closeModal('modal-history')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings -->
 <div class="modal-overlay" id="modal-settings">
   <div class="modal">
     <h2>⚙️ Configurações</h2>
@@ -317,88 +610,337 @@
     <div class="form-group">
       <label>Mensagem de Bom Dia</label>
       <textarea id="s-msg-bomddia" rows="3"></textarea>
-      <small style="color:#555;font-size:0.75rem;">Use {pix}.</small>
+      <small style="color:#555;font-size:0.73rem;">Use {pix}.</small>
     </div>
     <div class="form-group">
       <label>Mensagem de Cobrança</label>
       <textarea id="s-msg-cobranca" rows="3"></textarea>
-      <small style="color:#555;font-size:0.75rem;">Use {nome}, {parcela}, {restante}, {pix}.</small>
+      <small style="color:#555;font-size:0.73rem;">Use {nome}, {parcela}, {restante}, {pix}.</small>
+    </div>
+    <div class="section-divider">Alterar Senha</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nova senha (app)</label>
+        <input type="password" id="s-pw" placeholder="Deixe em branco para manter" />
+      </div>
+      <div class="form-group">
+        <label>Nova senha (admin)</label>
+        <input type="password" id="s-admin-pw" placeholder="Deixe em branco para manter" />
+      </div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-gray" onclick="closeModal('modal-settings')">Cancelar</button>
+      <button class="btn btn-gray"  onclick="closeModal('modal-settings')">Cancelar</button>
       <button class="btn btn-green" onclick="saveSettings()">Salvar</button>
     </div>
   </div>
 </div>
 
+<!-- Add Expense -->
+<div class="modal-overlay" id="modal-expense">
+  <div class="modal" style="max-width:380px;">
+    <h2 style="color:#ff5252;">💸 Nova Despesa</h2>
+    <div class="form-group">
+      <label>Descrição</label>
+      <input type="text" id="exp-desc" placeholder="Ex: Aluguel, Conta de luz..." />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Valor (R$)</label>
+        <input type="number" id="exp-valor" placeholder="0,00" step="0.01" min="0.01" />
+      </div>
+      <div class="form-group">
+        <label>Data</label>
+        <input type="date" id="exp-data" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-gray" onclick="closeModal('modal-expense')">Cancelar</button>
+      <button class="btn btn-red"  onclick="saveExpense()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════ -->
 <script>
-// ─── DATA ────────────────────────────────────────────────────────────
-let data = JSON.parse(localStorage.getItem('cobrancas') || JSON.stringify({
-  clients: [],
-  settings: {
-    pix: '11968554978',
-    msgBomDia: 'Bom dia a todos, enviem a parcela, chave pix {pix}',
-    msgCobranca: 'Boa tarde {nome}! Ainda não recebi sua parcela de hoje (R$ {parcela}). Chave PIX: {pix}'
-  }
-}));
+// ─── DATA ────────────────────────────────────────────────────────────────────
+function defaultData() {
+  return {
+    auth: { senha: null, senhaAdmin: null },
+    clients: [],
+    despesas: [],
+    settings: {
+      pix: '',
+      msgBomDia:   'Bom dia a todos, enviem a parcela, chave pix {pix}',
+      msgCobranca: 'Boa tarde {nome}! Ainda não recebi sua parcela de hoje (R$ {parcela}). Chave PIX: {pix}'
+    }
+  };
+}
+
+let data = (() => {
+  try { return JSON.parse(localStorage.getItem('cobrancas')) || defaultData(); }
+  catch(e) { return defaultData(); }
+})();
+
 function save() { localStorage.setItem('cobrancas', JSON.stringify(data)); }
 
-// ─── UTILS ───────────────────────────────────────────────────────────
-function todayStr() { return new Date().toISOString().split('T')[0]; }
-function formatDate(s) { if (!s) return '-'; const [y,m,d]=s.split('-'); return `${d}/${m}/${y}`; }
-function fm(v) { return 'R$ ' + parseFloat(v||0).toFixed(2).replace('.',','); }
+// ─── UTILS ───────────────────────────────────────────────────────────────────
+function todayStr()    { return new Date().toISOString().split('T')[0]; }
+function formatDate(s) { if(!s) return '-'; const[y,m,d]=s.split('-'); return `${d}/${m}/${y}`; }
+function fm(v)         { return 'R$ '+parseFloat(v||0).toFixed(2).replace('.',','); }
 function maskCPF(el) {
-  let v = el.value.replace(/\D/g,'').slice(0,11);
-  v = v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})\.(\d{3})(\d)/,'$1.$2.$3').replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/,'$1.$2.$3-$4');
-  el.value = v;
+  let v=el.value.replace(/\D/g,'').slice(0,11);
+  v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})\.(\d{3})(\d)/,'$1.$2.$3').replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/,'$1.$2.$3-$4');
+  el.value=v;
 }
 
-// ─── PAYMENT HELPERS ─────────────────────────────────────────────────
-function norm(p, pd) { return typeof p === 'string' ? {data:p, valor:pd} : p; }
+// ─── AUTH ────────────────────────────────────────────────────────────────────
+let adminUnlocked = false;
 
-function getTotalPaid(c) {
-  return (c.pagamentos||[]).reduce((s,p) => s + norm(p,c.parcelaDiaria).valor, 0);
-}
-function getTodayPaid(c) {
-  const t = todayStr();
-  return (c.pagamentos||[]).map(p=>norm(p,c.parcelaDiaria)).filter(p=>p.data===t).reduce((s,p)=>s+p.valor,0);
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-// Multas: every 2 faltas = 1 multa = +1 parcela
-function getFaltas(c) { return (c.faltas||[]).length; }
-function getMultas(c)  { return Math.floor(getFaltas(c) / 2); }
-function getEffectiveTotal(c) { return c.totalPagar + getMultas(c) * c.parcelaDiaria; }
-function getEffectiveDias(c)  { return c.dias + getMultas(c); }
-function getRemainingBalance(c){ return Math.max(0, getEffectiveTotal(c) - getTotalPaid(c)); }
-function getCompletedDays(c)  { return Math.floor(getTotalPaid(c) / c.parcelaDiaria); }
+function doSetup() {
+  const pw1   = document.getElementById('setup-pw1').value;
+  const pw2   = document.getElementById('setup-pw2').value;
+  const admin = document.getElementById('setup-admin').value;
+  const err   = document.getElementById('setup-err');
+  if(pw1.length < 4) { showErr(err,'Senha mínima de 4 caracteres'); return; }
+  if(pw1 !== pw2)    { showErr(err,'As senhas não coincidem'); return; }
+  if(!admin)         { showErr(err,'Informe a senha administrativa'); return; }
+  data.auth.senha      = pw1;
+  data.auth.senhaAdmin = admin;
+  save();
+  err.style.display='none';
+  enterApp();
+}
 
-function hasPaymentToday(c) { return getTodayPaid(c) > 0.01; }
-function markedNoPaidToday(c){ return (c.faltas||[]).includes(todayStr()); }
-function isFinished(c) { return getTotalPaid(c) >= getEffectiveTotal(c) - 0.01; }
+function doLogin() {
+  const pw  = document.getElementById('login-pw').value;
+  const err = document.getElementById('login-err');
+  if(pw === data.auth.senha) { err.style.display='none'; enterApp(); }
+  else { showErr(err,'Senha incorreta'); document.getElementById('login-pw').value=''; }
+}
+
+function doLogout() {
+  adminUnlocked = false;
+  showScreen('screen-login');
+  document.getElementById('login-pw').value='';
+}
+
+function enterApp() {
+  showScreen('screen-app');
+  document.getElementById('today-date').textContent =
+    new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});
+  render();
+}
+
+function showErr(el, msg) {
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// ─── ADMIN ───────────────────────────────────────────────────────────────────
+function showAdmin() {
+  if(adminUnlocked) { renderAdmin(); showScreen('screen-admin'); return; }
+  document.getElementById('admin-login-pw').value='';
+  document.getElementById('admin-login-err').style.display='none';
+  openModal('modal-admin-login');
+}
+
+function doAdminLogin() {
+  const pw  = document.getElementById('admin-login-pw').value;
+  const err = document.getElementById('admin-login-err');
+  if(pw === data.auth.senhaAdmin) {
+    adminUnlocked = true;
+    closeModal('modal-admin-login');
+    renderAdmin();
+    showScreen('screen-admin');
+  } else {
+    showErr(err,'Senha incorreta');
+    document.getElementById('admin-login-pw').value='';
+  }
+}
+
+function showApp() {
+  showScreen('screen-app');
+}
+
+function renderAdmin() {
+  // Set month filter to current month if empty
+  const mf = document.getElementById('expense-month-filter');
+  if(!mf.value) mf.value = todayStr().substring(0,7);
+
+  // ── Financial grid
+  const active   = data.clients.filter(c=>c.ativo && !isFinished(c));
+  const all      = data.clients;
+
+  let totalEmprestado=0, totalComJuros=0, totalRecebido=0;
+  all.forEach(c=>{
+    totalEmprestado += c.valorPrincipal;
+    totalComJuros   += getEffectiveTotal(c);
+    totalRecebido   += getTotalPaid(c);
+  });
+  const emAberto    = totalComJuros - totalRecebido;
+  const lucroBruto  = totalRecebido - totalEmprestado;
+  const totalDesp   = (data.despesas||[]).reduce((s,d)=>s+d.valor,0);
+  const lucroLiq    = lucroBruto - totalDesp;
+
+  document.getElementById('admin-fin-grid').innerHTML = [
+    {label:'Total Emprestado', val:fm(totalEmprestado), cls:'blue'},
+    {label:'Total c/ Juros',   val:fm(totalComJuros),   cls:'yellow'},
+    {label:'Total Recebido',   val:fm(totalRecebido),   cls:'green'},
+    {label:'Em Aberto',        val:fm(emAberto),        cls:'orange'},
+    {label:'Lucro Bruto',      val:fm(lucroBruto),      cls:'green'},
+    {label:'Despesas',         val:fm(totalDesp),       cls:'red'},
+    {label:'Lucro Líquido',    val:fm(lucroLiq),        cls: lucroLiq>=0?'green':'red'},
+    {label:'Juros Gerados',    val:fm(totalComJuros-totalEmprestado), cls:'purple'},
+  ].map(i=>`<div class="admin-card ${i.cls}">
+    <div class="a-label">${i.label}</div>
+    <div class="a-value">${i.val}</div>
+  </div>`).join('');
+
+  // ── Portfolio grid
+  const comMulta = all.filter(c=>getMultas(c)>0&&c.ativo&&!isFinished(c));
+  const encerrados = all.filter(c=>isFinished(c)||!c.ativo);
+  document.getElementById('admin-portfolio-grid').innerHTML = [
+    {label:'Clientes Ativos',  val:active.length,      cls:'green'},
+    {label:'Com Multa',        val:comMulta.length,     cls:'purple'},
+    {label:'Encerrados',       val:encerrados.length,   cls:''},
+    {label:'Total Cadastrados',val:all.length,          cls:'blue'},
+  ].map(i=>`<div class="admin-card ${i.cls}">
+    <div class="a-label">${i.label}</div>
+    <div class="a-value">${i.val}</div>
+  </div>`).join('');
+
+  renderExpenses();
+}
+
+function renderExpenses() {
+  const month = document.getElementById('expense-month-filter').value;
+  let despesas = (data.despesas||[]);
+  if(month) despesas = despesas.filter(d=>d.data&&d.data.startsWith(month));
+  despesas = [...despesas].sort((a,b)=>b.data.localeCompare(a.data));
+
+  const totalMes = despesas.reduce((s,d)=>s+d.valor,0);
+
+  const list = document.getElementById('expense-list');
+  if(!despesas.length) {
+    list.innerHTML = `<div class="empty-state"><div class="icon">💸</div><div>Nenhuma despesa${month?' neste mês':''}</div></div>`;
+  } else {
+    list.innerHTML = `<div style="text-align:right;font-size:0.78rem;color:#888;margin-bottom:10px;">
+      Total: <strong style="color:#ff5252">${fm(totalMes)}</strong>
+    </div>` + despesas.map(d=>`
+      <div class="expense-item">
+        <div class="expense-info">
+          <div class="e-desc">${d.desc}</div>
+          <div class="e-date">${formatDate(d.data)}</div>
+        </div>
+        <div class="expense-right">
+          <div class="expense-val">${fm(d.valor)}</div>
+          <button class="btn btn-red btn-sm" onclick="deleteExpense('${d.id}')">🗑️</button>
+        </div>
+      </div>`).join('');
+  }
+}
+
+function openExpenseModal() {
+  document.getElementById('exp-desc').value  = '';
+  document.getElementById('exp-valor').value = '';
+  document.getElementById('exp-data').value  = todayStr();
+  openModal('modal-expense');
+}
+
+function saveExpense() {
+  const desc  = document.getElementById('exp-desc').value.trim();
+  const valor = parseFloat(document.getElementById('exp-valor').value);
+  const data_ = document.getElementById('exp-data').value;
+  if(!desc||!valor||valor<=0||!data_) { toast('⚠️ Preencha todos os campos!',true); return; }
+  if(!data.despesas) data.despesas=[];
+  data.despesas.push({id:Date.now().toString(), desc, valor, data:data_});
+  save(); closeModal('modal-expense'); renderAdmin();
+  toast('✅ Despesa registrada!');
+}
+
+function deleteExpense(id) {
+  if(!confirm('Remover esta despesa?')) return;
+  data.despesas = (data.despesas||[]).filter(d=>d.id!==id);
+  save(); renderAdmin(); toast('🗑️ Despesa removida');
+}
+
+// ─── PAYMENT HELPERS ────────────────────────────────────────────────────────
+function norm(p, pd) { return typeof p==='string' ? {data:p, valor:pd} : p; }
+
+function getTotalPaid(c)    { return (c.pagamentos||[]).reduce((s,p)=>s+norm(p,c.parcelaDiaria).valor,0); }
+function getTodayPaid(c)    { const t=todayStr(); return (c.pagamentos||[]).map(p=>norm(p,c.parcelaDiaria)).filter(p=>p.data===t).reduce((s,p)=>s+p.valor,0); }
+function getFaltas(c)       { return (c.faltas||[]).length; }
+function getMultas(c)       { return Math.floor(getFaltas(c)/2); }
+function getEffectiveTotal(c){ return c.totalPagar + getMultas(c)*c.parcelaDiaria; }
+function getEffectiveDias(c) { return c.dias + getMultas(c); }
+function getRemainingBalance(c){ return Math.max(0, getEffectiveTotal(c)-getTotalPaid(c)); }
+function getCompletedDays(c)  { return Math.floor(getTotalPaid(c)/c.parcelaDiaria); }
+function hasPaymentToday(c)   { return getTodayPaid(c)>0.01; }
+function markedNoPaidToday(c) { return (c.faltas||[]).includes(todayStr()); }
+function isFinished(c)        { return getTotalPaid(c)>=getEffectiveTotal(c)-0.01; }
 function isActiveToday(c) {
-  if (!c.ativo || isFinished(c)) return false;
-  return new Date(todayStr()) >= new Date(c.dataInicio);
+  if(!c.ativo||isFinished(c)) return false;
+  return new Date(todayStr())>=new Date(c.dataInicio);
 }
 
-// ─── SUMMARY ─────────────────────────────────────────────────────────
+// ─── SUMMARY ─────────────────────────────────────────────────────────────────
 function updateSummary() {
   let expected=0, received=0;
-  data.clients.forEach(c => {
-    if (!isActiveToday(c)) return;
+  data.clients.forEach(c=>{
+    if(!isActiveToday(c)) return;
     expected += c.parcelaDiaria;
     received += Math.min(getTodayPaid(c), c.parcelaDiaria);
   });
   document.getElementById('sum-expected').textContent = fm(expected);
   document.getElementById('sum-received').textContent = fm(received);
-  document.getElementById('sum-pending').textContent  = fm(expected - received);
+  document.getElementById('sum-pending').textContent  = fm(expected-received);
 }
 
-// ─── RENDER ──────────────────────────────────────────────────────────
+// ─── MULTA ALERT ────────────────────────────────────────────────────────────
+function updateMultaAlert() {
+  const comMulta = data.clients.filter(c=>c.ativo&&!isFinished(c)&&getMultas(c)>0);
+  const el = document.getElementById('multa-alert');
+  if(comMulta.length>0) {
+    el.innerHTML = `⚠️ <strong>${comMulta.length} cliente${comMulta.length>1?'s':''} com multa!</strong> — Clique para filtrar`;
+    el.classList.add('show');
+  } else {
+    el.classList.remove('show');
+  }
+}
+
+// ─── SEARCH ──────────────────────────────────────────────────────────────────
+let searchQuery = '';
+
+function onSearch(el) {
+  searchQuery = el.value.toLowerCase().trim();
+  const bar = document.getElementById('search-bar');
+  if(searchQuery) bar.classList.add('has-value'); else bar.classList.remove('has-value');
+  renderClients();
+}
+
+function clearSearch() {
+  document.getElementById('search-input').value='';
+  searchQuery='';
+  document.getElementById('search-bar').classList.remove('has-value');
+  renderClients();
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
 let currentFilter = 'all';
+
 function setFilter(f, el) {
   currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
   renderClients();
 }
 
@@ -406,55 +948,57 @@ function renderClients() {
   const list = document.getElementById('client-list');
   let clients = [...data.clients];
 
-  if      (currentFilter==='pending')  clients = clients.filter(c => isActiveToday(c) && !hasPaymentToday(c) && !markedNoPaidToday(c));
-  else if (currentFilter==='paid')     clients = clients.filter(c => isActiveToday(c) && hasPaymentToday(c));
-  else if (currentFilter==='nopaid')   clients = clients.filter(c => isActiveToday(c) && markedNoPaidToday(c) && !hasPaymentToday(c));
-  else if (currentFilter==='finished') clients = clients.filter(c => isFinished(c) || !c.ativo);
-  else                                 clients = clients.filter(c => c.ativo);
+  // Apply filter
+  if      (currentFilter==='pending')  clients=clients.filter(c=>isActiveToday(c)&&!hasPaymentToday(c)&&!markedNoPaidToday(c));
+  else if (currentFilter==='paid')     clients=clients.filter(c=>isActiveToday(c)&&hasPaymentToday(c));
+  else if (currentFilter==='nopaid')   clients=clients.filter(c=>isActiveToday(c)&&markedNoPaidToday(c)&&!hasPaymentToday(c));
+  else if (currentFilter==='multa')    clients=clients.filter(c=>c.ativo&&!isFinished(c)&&getMultas(c)>0);
+  else if (currentFilter==='finished') clients=clients.filter(c=>isFinished(c)||!c.ativo);
+  else                                 clients=clients.filter(c=>c.ativo);
 
-  if (!clients.length) {
-    list.innerHTML = `<div class="empty-state"><div class="icon">📭</div><div>Nenhum cliente aqui</div></div>`;
+  // Apply search
+  if(searchQuery) clients=clients.filter(c=>c.nome.toLowerCase().includes(searchQuery));
+
+  if(!clients.length) {
+    list.innerHTML=`<div class="empty-state"><div class="icon">📭</div><div>Nenhum cliente encontrado</div></div>`;
     return;
   }
 
-  list.innerHTML = clients.map(c => {
-    const finished   = isFinished(c);
-    const paid       = hasPaymentToday(c);
-    const nopaid     = markedNoPaidToday(c) && !paid;
-    const active     = isActiveToday(c);
-    const todayPaid  = getTodayPaid(c);
-    const completed  = getCompletedDays(c);
-    const effTotal   = getEffectiveTotal(c);
-    const effDias    = getEffectiveDias(c);
-    const multas     = getMultas(c);
-    const faltas     = getFaltas(c);
-    const progress   = Math.min(100, (getTotalPaid(c) / effTotal) * 100).toFixed(0);
-    const remaining  = getRemainingBalance(c);
-    const restHoje   = Math.max(0, c.parcelaDiaria - todayPaid);
+  list.innerHTML = clients.map(c=>{
+    const finished  = isFinished(c);
+    const paid      = hasPaymentToday(c);
+    const nopaid    = markedNoPaidToday(c)&&!paid;
+    const active    = isActiveToday(c);
+    const todayPaid = getTodayPaid(c);
+    const completed = getCompletedDays(c);
+    const effTotal  = getEffectiveTotal(c);
+    const effDias   = getEffectiveDias(c);
+    const multas    = getMultas(c);
+    const faltas    = getFaltas(c);
+    const progress  = Math.min(100,(getTotalPaid(c)/effTotal)*100).toFixed(0);
+    const remaining = getRemainingBalance(c);
+    const restHoje  = Math.max(0, c.parcelaDiaria-todayPaid);
+    const jurosValor= c.totalPagar - c.valorPrincipal;
 
-    const statusClass = finished ? 'finished' : paid ? 'paid' : nopaid ? 'nopaid' : 'pending';
-    const statusLabel = finished ? '✅ Encerrado'
-      : paid    ? (todayPaid >= c.parcelaDiaria - 0.01 ? '✅ Pago' : `💛 Parcial (${fm(todayPaid)})`)
-      : nopaid  ? '❌ Não Pago'
-      : '⏳ Pendente';
-    const statusBadge = finished ? 'status-finished' : paid ? 'status-paid' : nopaid ? 'status-nopaid' : 'status-pending';
+    const statusClass = finished?'finished':paid?'paid':nopaid?'nopaid':'pending';
+    const statusLabel = finished?'✅ Encerrado'
+      :paid?(todayPaid>=c.parcelaDiaria-0.01?'✅ Pago':`💛 Parcial (${fm(todayPaid)})`)
+      :nopaid?'❌ Não Pago':'⏳ Pendente';
+    const statusBadge = finished?'status-finished':paid?'status-paid':nopaid?'status-nopaid':'status-pending';
 
     const wppMsg = data.settings.msgCobranca
-      .replace('{nome}', c.nome)
-      .replace('{parcela}', c.parcelaDiaria.toFixed(2).replace('.',','))
-      .replace('{restante}', restHoje.toFixed(2).replace('.',','))
-      .replace('{pix}', data.settings.pix);
+      .replace('{nome}',c.nome)
+      .replace('{parcela}',c.parcelaDiaria.toFixed(2).replace('.',','))
+      .replace('{restante}',restHoje.toFixed(2).replace('.',','))
+      .replace('{pix}',data.settings.pix);
     const wppLink = `https://wa.me/55${c.telefone}?text=${encodeURIComponent(wppMsg)}`;
-
-    // juros value
-    const jurosValor = c.totalPagar - c.valorPrincipal;
 
     return `
     <div class="client-card ${statusClass}">
       <div class="client-header">
         <div>
-          <div class="client-name">${c.nome}</div>
-          ${multas > 0 ? `<span class="multa-badge">⚠️ ${multas} multa${multas>1?'s':''} • ${faltas} falta${faltas>1?'s':''}</span>` : ''}
+          <div class="client-name" onclick="openHistory('${c.id}')">${c.nome}</div>
+          ${multas>0?`<span class="multa-badge">⚠️ ${multas} multa${multas>1?'s':''} · ${faltas} falta${faltas>1?'s':''}</span>`:''}
         </div>
         <span class="client-status ${statusBadge}">${statusLabel}</span>
       </div>
@@ -482,7 +1026,7 @@ function renderClients() {
         </div>
         <div class="info-item">
           <div class="label">Faltas</div>
-          <div class="val ${faltas>0?'danger':''}">${faltas} ${faltas>0?`(${multas} multa${multas!==1?'s':''})`:''}</div>
+          <div class="val ${faltas>0?'danger':''}">${faltas} ${faltas>0?`(${multas}✕ multa)`:''}</div>
         </div>
         <div class="info-item">
           <div class="label">Total c/ juros</div>
@@ -499,95 +1043,132 @@ function renderClients() {
       </div>
 
       <div class="client-actions">
-        ${active && !finished ? `<button class="btn btn-green btn-sm" onclick="openPartialModal('${c.id}')">✅ Pago</button>` : ''}
-        ${active && !paid && !nopaid && !finished ? `<button class="btn btn-red btn-sm" onclick="markNoPaid('${c.id}')">❌ Não Pago</button>` : ''}
-        ${(paid || nopaid) && !finished ? `<button class="btn btn-gray btn-sm" onclick="undoToday('${c.id}')">↩️ Desfazer</button>` : ''}
+        ${active&&!finished?`<button class="btn btn-green btn-sm" onclick="openPartialModal('${c.id}')">✅ Pago</button>`:''}
+        ${active&&!paid&&!nopaid&&!finished?`<button class="btn btn-red btn-sm" onclick="markNoPaid('${c.id}')">❌ Não Pago</button>`:''}
+        ${(paid||nopaid)&&!finished?`<button class="btn btn-gray btn-sm" onclick="undoToday('${c.id}')">↩️ Desfazer</button>`:''}
         <a class="btn btn-wpp btn-sm" href="${wppLink}" target="_blank">💬 WhatsApp</a>
         <button class="btn btn-gray btn-sm" onclick="openEditModal('${c.id}')">✏️ Editar</button>
-        <button class="btn btn-red btn-sm" onclick="deleteClient('${c.id}')">🗑️</button>
+        <button class="btn btn-red btn-sm"  onclick="deleteClient('${c.id}')">🗑️</button>
       </div>
     </div>`;
   }).join('');
 }
 
-function render() { updateSummary(); renderClients(); }
+function render() { updateSummary(); updateMultaAlert(); renderClients(); }
 
-// ─── PAYMENT ACTIONS ─────────────────────────────────────────────────
+// ─── HISTORY MODAL ───────────────────────────────────────────────────────────
+function openHistory(id) {
+  const c = data.clients.find(x=>x.id===id);
+  if(!c) return;
+
+  const effTotal  = getEffectiveTotal(c);
+  const totalPago = getTotalPaid(c);
+  const multas    = getMultas(c);
+  const faltas    = getFaltas(c);
+
+  document.getElementById('history-title').textContent = `📋 ${c.nome}`;
+
+  document.getElementById('history-summary').innerHTML =
+    `<strong style="color:#eee">${c.nome}</strong><br>
+     ${c.cpf?`CPF: ${c.cpf} · `:''}${c.rg?`RG: ${c.rg}`:''}${(c.cpf||c.rg)?'<br>':''}
+     ${c.endereco?`📍 ${c.endereco}<br>`:''}
+     Empréstimo: <strong>${fm(c.valorPrincipal)}</strong> · Juros: ${c.juros}% · Dias: ${c.dias}<br>
+     Total a pagar: <strong style="color:#00c853">${fm(effTotal)}</strong>
+     ${multas>0?` <span style="color:#ce93d8">(+${multas} multa${multas>1?'s':''})</span>`:''}<br>
+     Pago: <strong>${fm(totalPago)}</strong> · Restante: <strong style="color:${getRemainingBalance(c)>0?'#ff5252':'#00c853'}">${fm(getRemainingBalance(c))}</strong>`;
+
+  // Payments
+  const pags = [...(c.pagamentos||[])].map(p=>norm(p,c.parcelaDiaria)).sort((a,b)=>b.data.localeCompare(a.data));
+  document.getElementById('history-payments').innerHTML = pags.length===0
+    ? '<div style="color:#555;padding:10px 0;">Nenhum pagamento</div>'
+    : pags.map(p=>`
+      <div class="hist-item">
+        <span class="hist-date">${formatDate(p.data)}</span>
+        <span class="hist-val paid">${fm(p.valor)}</span>
+      </div>`).join('');
+
+  // Faltas
+  const fs = [...(c.faltas||[])].sort((a,b)=>b.localeCompare(a));
+  document.getElementById('history-faltas').innerHTML = fs.length===0
+    ? '<div style="color:#555;padding:10px 0;">Nenhuma falta</div>'
+    : fs.map((d,i)=>{
+        const n = fs.length - i; // índice cronológico
+        const isMulta = n%2===0;
+        return `<div class="hist-item">
+          <span class="hist-date">${formatDate(d)} — falta #${n}</span>
+          <span class="hist-val ${isMulta?'multa':'falta'}">${isMulta?'⚠️ MULTA':'❌ Falta'}</span>
+        </div>`;
+      }).join('');
+
+  openModal('modal-history');
+}
+
+// ─── PAYMENT ACTIONS ─────────────────────────────────────────────────────────
 function openPartialModal(id) {
   const c = data.clients.find(x=>x.id===id);
-  if (!c) return;
+  if(!c) return;
   const already = getTodayPaid(c);
-  const rest = Math.max(0, c.parcelaDiaria - already);
-  document.getElementById('partial-client-id').value = id;
-  document.getElementById('partial-valor').value = '';
+  const rest    = Math.max(0, c.parcelaDiaria-already);
+  document.getElementById('partial-client-id').value  = id;
+  document.getElementById('partial-valor').value      = '';
   document.getElementById('partial-client-info').innerHTML =
     `<strong style="color:#eee">${c.nome}</strong><br>
      Parcela diária: <strong>${fm(c.parcelaDiaria)}</strong><br>
-     ${already>0 ? `Já recebido hoje: <strong style="color:#ff9100">${fm(already)}</strong><br>` : ''}
+     ${already>0?`Já recebido hoje: <strong style="color:#ff9100">${fm(already)}</strong><br>`:''}
      Faltando: <strong style="color:#ff5252">${fm(rest)}</strong>`;
   openModal('modal-partial');
+  setTimeout(()=>document.getElementById('partial-valor').focus(),200);
 }
 
 function savePartialPayment() {
   const id    = document.getElementById('partial-client-id').value;
   const valor = parseFloat(document.getElementById('partial-valor').value);
   const c     = data.clients.find(x=>x.id===id);
-  if (!c || !valor || valor <= 0) { toast('⚠️ Informe um valor válido!', true); return; }
-  if (!c.pagamentos) c.pagamentos = [];
-
-  // Remove any not-paid mark for today if exists
-  c.faltas = (c.faltas||[]).filter(d => d !== todayStr());
-
-  c.pagamentos.push({ data: todayStr(), valor });
-
+  if(!c||!valor||valor<=0) { toast('⚠️ Informe um valor válido!',true); return; }
+  if(!c.pagamentos) c.pagamentos=[];
+  c.faltas = (c.faltas||[]).filter(d=>d!==todayStr());
+  c.pagamentos.push({data:todayStr(), valor});
   const newTotal = getTodayPaid(c);
-  if (newTotal >= c.parcelaDiaria - 0.01) {
-    toast(`✅ ${c.nome} — parcela completa!`);
-  } else {
-    toast(`💛 ${c.nome} — ${fm(valor)} registrado (parcial)`);
-  }
+  if(newTotal>=c.parcelaDiaria-0.01) toast(`✅ ${c.nome} — parcela completa!`);
+  else toast(`💛 ${c.nome} — ${fm(valor)} registrado (parcial)`);
   save(); render(); closeModal('modal-partial');
 }
 
 function markNoPaid(id) {
   const c = data.clients.find(x=>x.id===id);
-  if (!c) return;
-  if (!c.faltas) c.faltas = [];
-  if (!c.faltas.includes(todayStr())) {
+  if(!c) return;
+  if(!c.faltas) c.faltas=[];
+  if(!c.faltas.includes(todayStr())) {
     c.faltas.push(todayStr());
-    const multas = getMultas(c);
-    const faltas = getFaltas(c);
-    const newMulta = faltas % 2 === 0;
-    if (newMulta) {
-      toast(`⚠️ ${c.nome} — ${faltas} faltas = MULTA! +1 parcela`, true);
-    } else {
-      toast(`❌ ${c.nome} — falta registrada (${faltas}/2 para multa)`, true);
-    }
+    const f = getFaltas(c);
+    if(f%2===0) toast(`⚠️ ${c.nome} — ${f} faltas = MULTA! +1 parcela`,true);
+    else        toast(`❌ ${c.nome} — falta registrada (${f}/2 para multa)`,true);
   }
   save(); render();
 }
 
 function undoToday(id) {
   const c = data.clients.find(x=>x.id===id);
-  if (!c) return;
-  c.pagamentos = (c.pagamentos||[]).filter(p => norm(p,c.parcelaDiaria).data !== todayStr());
-  c.faltas = (c.faltas||[]).filter(d => d !== todayStr());
+  if(!c) return;
+  c.pagamentos = (c.pagamentos||[]).filter(p=>norm(p,c.parcelaDiaria).data!==todayStr());
+  c.faltas     = (c.faltas||[]).filter(d=>d!==todayStr());
   save(); render(); toast(`↩️ Ação de hoje de ${c.nome} desfeita`);
 }
 
-// ─── ADD/EDIT ─────────────────────────────────────────────────────────
+// ─── ADD / EDIT CLIENT ───────────────────────────────────────────────────────
 function openAddModal() {
-  document.getElementById('modal-client-title').textContent = 'Novo Cliente';
-  ['f-nome','f-phone','f-cpf','f-rg','f-endereco','f-principal','f-juros','f-dias','f-edit-id'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('f-inicio').value = todayStr();
-  document.getElementById('calc-preview').innerHTML = 'Preencha os valores acima para ver o cálculo.';
+  document.getElementById('modal-client-title').textContent='Novo Cliente';
+  ['f-nome','f-phone','f-cpf','f-rg','f-endereco','f-principal','f-juros','f-dias','f-edit-id']
+    .forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-inicio').value=todayStr();
+  document.getElementById('calc-preview').innerHTML='Preencha os valores para ver o cálculo.';
   openModal('modal-client');
 }
 
 function openEditModal(id) {
   const c = data.clients.find(x=>x.id===id);
-  if (!c) return;
-  document.getElementById('modal-client-title').textContent = 'Editar Cliente';
+  if(!c) return;
+  document.getElementById('modal-client-title').textContent='Editar Cliente';
   document.getElementById('f-nome').value     = c.nome;
   document.getElementById('f-phone').value    = c.telefone;
   document.getElementById('f-cpf').value      = c.cpf||'';
@@ -603,14 +1184,12 @@ function openEditModal(id) {
 }
 
 function calcPreview() {
-  const p = parseFloat(document.getElementById('f-principal').value)||0;
-  const j = parseFloat(document.getElementById('f-juros').value)||0;
-  const d = parseInt(document.getElementById('f-dias').value)||0;
-  if (!p||!j||!d) { document.getElementById('calc-preview').innerHTML='Preencha os valores acima para ver o cálculo.'; return; }
-  const jurosVal = p * (j/100);
-  const total    = p + jurosVal;
-  const parcela  = total / d;
-  document.getElementById('calc-preview').innerHTML =
+  const p=parseFloat(document.getElementById('f-principal').value)||0;
+  const j=parseFloat(document.getElementById('f-juros').value)||0;
+  const d=parseInt(document.getElementById('f-dias').value)||0;
+  if(!p||!j||!d) { document.getElementById('calc-preview').innerHTML='Preencha os valores para ver o cálculo.'; return; }
+  const jurosVal=p*(j/100), total=p+jurosVal, parcela=total/d;
+  document.getElementById('calc-preview').innerHTML=
     `Emprestado: <strong>${fm(p)}</strong><br>
      + Juros ${j}%: <strong>+${fm(jurosVal)}</strong><br>
      <div class="total-line">= Total a receber: <strong>${fm(total)}</strong></div>
@@ -618,44 +1197,51 @@ function calcPreview() {
 }
 
 function saveClient() {
-  const nome         = document.getElementById('f-nome').value.trim();
-  const telefone     = document.getElementById('f-phone').value.replace(/\D/g,'');
-  const cpf          = document.getElementById('f-cpf').value.trim();
-  const rg           = document.getElementById('f-rg').value.trim();
-  const endereco     = document.getElementById('f-endereco').value.trim();
-  const valorPrincipal = parseFloat(document.getElementById('f-principal').value);
-  const juros        = parseFloat(document.getElementById('f-juros').value);
-  const dias         = parseInt(document.getElementById('f-dias').value);
-  const dataInicio   = document.getElementById('f-inicio').value;
-  const editId       = document.getElementById('f-edit-id').value;
+  const nome          = document.getElementById('f-nome').value.trim();
+  const telefone      = document.getElementById('f-phone').value.replace(/\D/g,'');
+  const cpf           = document.getElementById('f-cpf').value.trim();
+  const rg            = document.getElementById('f-rg').value.trim();
+  const endereco      = document.getElementById('f-endereco').value.trim();
+  const valorPrincipal= parseFloat(document.getElementById('f-principal').value);
+  const juros         = parseFloat(document.getElementById('f-juros').value);
+  const dias          = parseInt(document.getElementById('f-dias').value);
+  const dataInicio    = document.getElementById('f-inicio').value;
+  const editId        = document.getElementById('f-edit-id').value;
 
-  if (!nome||!telefone||!valorPrincipal||!juros||!dias||!dataInicio) {
-    toast('⚠️ Preencha nome, WhatsApp e dados do empréstimo!', true); return;
+  if(!nome||!telefone||!valorPrincipal||!juros||!dias||!dataInicio) {
+    toast('⚠️ Preencha nome, WhatsApp e dados do empréstimo!',true); return;
   }
-  const totalPagar    = valorPrincipal * (1 + juros/100);
-  const parcelaDiaria = totalPagar / dias;
+  const totalPagar    = valorPrincipal*(1+juros/100);
+  const parcelaDiaria = totalPagar/dias;
 
-  if (editId) {
+  if(editId) {
     const c = data.clients.find(x=>x.id===editId);
-    if (c) Object.assign(c, {nome,telefone,cpf,rg,endereco,valorPrincipal,juros,dias,dataInicio,totalPagar,parcelaDiaria});
+    if(c) Object.assign(c,{nome,telefone,cpf,rg,endereco,valorPrincipal,juros,dias,dataInicio,totalPagar,parcelaDiaria});
   } else {
-    data.clients.push({ id:Date.now().toString(), nome,telefone,cpf,rg,endereco,valorPrincipal,juros,dias,dataInicio,totalPagar,parcelaDiaria,pagamentos:[],faltas:[],ativo:true });
+    data.clients.push({id:Date.now().toString(),nome,telefone,cpf,rg,endereco,valorPrincipal,juros,dias,dataInicio,totalPagar,parcelaDiaria,pagamentos:[],faltas:[],ativo:true});
   }
   save(); render(); closeModal('modal-client');
   toast(editId?`✅ ${nome} atualizado!`:`✅ ${nome} cadastrado!`);
 }
 
-// ─── BOM DIA ─────────────────────────────────────────────────────────
+function deleteClient(id) {
+  const c = data.clients.find(x=>x.id===id);
+  if(!confirm(`Remover ${c?.nome||'este cliente'}?`)) return;
+  data.clients = data.clients.filter(x=>x.id!==id);
+  save(); render(); toast('🗑️ Cliente removido');
+}
+
+// ─── BOM DIA ─────────────────────────────────────────────────────────────────
 function openBomDiaModal() {
-  const msg = data.settings.msgBomDia.replace('{pix}',data.settings.pix);
+  const msg    = data.settings.msgBomDia.replace('{pix}',data.settings.pix);
   const active = data.clients.filter(c=>isActiveToday(c));
   document.getElementById('bomddia-list').innerHTML =
-    `<div style="background:#111;border-radius:8px;padding:12px;margin-bottom:12px;font-size:0.85rem;color:#aaa;">
+    `<div style="background:#111;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:0.83rem;color:#aaa;">
       <strong style="color:#25D366">Mensagem:</strong><br>"${msg}"
     </div>` +
-    (active.length===0 ? '<p style="color:#555;text-align:center;padding:20px">Nenhum cliente ativo</p>' :
-    active.map(c => {
-      const link = `https://wa.me/55${c.telefone}?text=${encodeURIComponent(msg)}`;
+    (active.length===0 ? '<p style="color:#555;text-align:center;padding:16px">Nenhum cliente ativo</p>' :
+    active.map(c=>{
+      const link=`https://wa.me/55${c.telefone}?text=${encodeURIComponent(msg)}`;
       return `<div class="wpp-item">
         <div><div class="wpp-name">${c.nome}</div><div class="wpp-value">${fm(c.parcelaDiaria)}/dia</div></div>
         <a class="btn btn-wpp btn-sm" href="${link}" target="_blank">💬 Abrir</a>
@@ -664,66 +1250,75 @@ function openBomDiaModal() {
   openModal('modal-bomddia');
 }
 
-// ─── COBRANÇA ────────────────────────────────────────────────────────
+// ─── COBRANÇA ────────────────────────────────────────────────────────────────
 function openCobrancaModal() {
   const pending = data.clients.filter(c=>isActiveToday(c)&&!hasPaymentToday(c));
-  document.getElementById('cobranca-list').innerHTML =
-    pending.length===0
-      ? '<p style="color:#00c853;text-align:center;padding:20px">🎉 Todos pagaram hoje!</p>'
-      : pending.map(c => {
-          const rest = Math.max(0, c.parcelaDiaria - getTodayPaid(c));
-          const msg = data.settings.msgCobranca
-            .replace('{nome}',c.nome)
-            .replace('{parcela}',c.parcelaDiaria.toFixed(2).replace('.',','))
-            .replace('{restante}',rest.toFixed(2).replace('.',','))
-            .replace('{pix}',data.settings.pix);
-          const link = `https://wa.me/55${c.telefone}?text=${encodeURIComponent(msg)}`;
-          return `<div class="wpp-item">
-            <div><div class="wpp-name">${c.nome}</div><div class="wpp-value">${fm(c.parcelaDiaria)} pendente</div></div>
-            <a class="btn btn-wpp btn-sm" href="${link}" target="_blank">💬 Cobrar</a>
-          </div>`;
-        }).join('');
+  document.getElementById('cobranca-list').innerHTML = pending.length===0
+    ? '<p style="color:#00c853;text-align:center;padding:16px">🎉 Todos pagaram hoje!</p>'
+    : pending.map(c=>{
+        const rest = Math.max(0, c.parcelaDiaria-getTodayPaid(c));
+        const msg  = data.settings.msgCobranca
+          .replace('{nome}',c.nome)
+          .replace('{parcela}',c.parcelaDiaria.toFixed(2).replace('.',','))
+          .replace('{restante}',rest.toFixed(2).replace('.',','))
+          .replace('{pix}',data.settings.pix);
+        const link = `https://wa.me/55${c.telefone}?text=${encodeURIComponent(msg)}`;
+        return `<div class="wpp-item">
+          <div><div class="wpp-name">${c.nome}</div><div class="wpp-value">${fm(c.parcelaDiaria)} pendente</div></div>
+          <a class="btn btn-wpp btn-sm" href="${link}" target="_blank">💬 Cobrar</a>
+        </div>`;
+      }).join('');
   openModal('modal-cobranca');
 }
 
-// ─── SETTINGS ────────────────────────────────────────────────────────
+// ─── SETTINGS ────────────────────────────────────────────────────────────────
 function openSettingsModal() {
-  document.getElementById('s-pix').value          = data.settings.pix;
-  document.getElementById('s-msg-bomddia').value  = data.settings.msgBomDia;
-  document.getElementById('s-msg-cobranca').value = data.settings.msgCobranca;
+  document.getElementById('s-pix').value         = data.settings.pix;
+  document.getElementById('s-msg-bomddia').value = data.settings.msgBomDia;
+  document.getElementById('s-msg-cobranca').value= data.settings.msgCobranca;
+  document.getElementById('s-pw').value          = '';
+  document.getElementById('s-admin-pw').value    = '';
   openModal('modal-settings');
 }
+
 function saveSettings() {
-  data.settings.pix          = document.getElementById('s-pix').value.trim();
-  data.settings.msgBomDia    = document.getElementById('s-msg-bomddia').value.trim();
-  data.settings.msgCobranca  = document.getElementById('s-msg-cobranca').value.trim();
+  data.settings.pix         = document.getElementById('s-pix').value.trim();
+  data.settings.msgBomDia   = document.getElementById('s-msg-bomddia').value.trim();
+  data.settings.msgCobranca = document.getElementById('s-msg-cobranca').value.trim();
+  const newPw    = document.getElementById('s-pw').value;
+  const newAdmin = document.getElementById('s-admin-pw').value;
+  if(newPw.length>=4)    data.auth.senha      = newPw;
+  if(newAdmin.length>=4) data.auth.senhaAdmin = newAdmin;
   save(); closeModal('modal-settings'); toast('✅ Configurações salvas!');
 }
 
-// ─── DELETE ──────────────────────────────────────────────────────────
-function deleteClient(id) {
-  const c = data.clients.find(x=>x.id===id);
-  if (!confirm(`Remover ${c?.nome||'este cliente'}?`)) return;
-  data.clients = data.clients.filter(x=>x.id!==id);
-  save(); render(); toast('🗑️ Cliente removido');
-}
-
-// ─── MODAL UTILS ─────────────────────────────────────────────────────
-function openModal(id) { document.getElementById(id).classList.add('open'); }
+// ─── MODAL UTILS ─────────────────────────────────────────────────────────────
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', e => { if(e.target===m) m.classList.remove('open'); }));
+document.querySelectorAll('.modal-overlay').forEach(m=>
+  m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); })
+);
 
 function toast(msg, warn=false) {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.className = 'toast' + (warn?' warn':'');
+  t.className = 'toast'+(warn?' warn':'');
   t.style.display = 'block';
   setTimeout(()=>t.style.display='none', 3000);
 }
 
-// ─── INIT ────────────────────────────────────────────────────────────
-document.getElementById('today-date').textContent = new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});
-render();
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+(function init() {
+  // Migrate old data without auth block
+  if(!data.auth) data.auth = { senha: null, senhaAdmin: null };
+  if(!data.despesas) data.despesas = [];
+
+  if(!data.auth.senha) {
+    showScreen('screen-setup');
+  } else {
+    showScreen('screen-login');
+  }
+})();
 </script>
 </body>
 </html>
