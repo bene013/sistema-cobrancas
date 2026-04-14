@@ -360,7 +360,16 @@
                onkeydown="if(event.key==='Enter')doActivateLicense()" />
       </div>
       <button class="auth-btn" onclick="doActivateLicense()">Ativar</button>
-      <div class="auth-link">Compre sua licença em <strong style="color:#00c853">bene013.github.io/sistema-cobrancas</strong></div>
+      <div class="auth-link"><a onclick="toggleOwnerLogin()">Sou o proprietário</a></div>
+      <div id="owner-login" style="display:none;margin-top:14px;">
+        <div class="auth-error" id="owner-err"></div>
+        <div class="form-group">
+          <label>Senha administrativa</label>
+          <input type="password" id="owner-pw" placeholder="Sua senha admin"
+                 onkeydown="if(event.key==='Enter')doOwnerLogin()" />
+        </div>
+        <button class="auth-btn" style="background:#9c27b0;" onclick="doOwnerLogin()">Entrar como dono</button>
+      </div>
     </div>
   </div>
 </div>
@@ -859,6 +868,29 @@ function getLicenseInfo() {
 function afterLicenseOk() {
   if(!data.auth.senha) showScreen('screen-setup');
   else showScreen('screen-login');
+}
+
+function toggleOwnerLogin() {
+  const el = document.getElementById('owner-login');
+  el.style.display = el.style.display==='none' ? 'block' : 'none';
+  if(el.style.display==='block') setTimeout(()=>document.getElementById('owner-pw').focus(),100);
+}
+
+function doOwnerLogin() {
+  const pw  = document.getElementById('owner-pw').value;
+  const err = document.getElementById('owner-err');
+  // Primeiro acesso — ainda não tem senha admin configurada
+  if(!data.auth.senhaAdmin) {
+    localStorage.setItem('gc_license', JSON.stringify({key:'OWNER', nome:'proprietario', expiry:'2099-12-31', activatedAt:todayStr()}));
+    err.style.display='none';
+    afterLicenseOk();
+    return;
+  }
+  if(pw !== data.auth.senhaAdmin) { showErr(err,'Senha incorreta'); document.getElementById('owner-pw').value=''; return; }
+  // Salva bypass permanente no dispositivo
+  localStorage.setItem('gc_license', JSON.stringify({key:'OWNER', nome:'proprietario', expiry:'2099-12-31', activatedAt:todayStr()}));
+  err.style.display='none';
+  afterLicenseOk();
 }
 
 // ── Gerador de chaves (admin) ──
