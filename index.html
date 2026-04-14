@@ -306,6 +306,30 @@
     }
     .toast.warn { background: #ff5252; color: #fff; }
 
+    /* ── LICENSE SCREEN ── */
+    .license-badge {
+      display: inline-block; background: #00c85318; border: 1px solid #00c85340;
+      border-radius: 20px; padding: 4px 12px; font-size: 0.75rem; color: #00c853;
+      margin-top: 6px;
+    }
+    .license-badge.warn { background: #ffd60018; border-color: #ffd60040; color: #ffd600; }
+    .license-badge.expired { background: #ff525218; border-color: #ff525240; color: #ff5252; }
+
+    /* ── KEY GENERATOR ── */
+    .key-output {
+      background: #111; border: 1px solid #00c85333; border-radius: 10px;
+      padding: 14px 16px; font-family: monospace; font-size: 1rem; color: #00c853;
+      letter-spacing: 1px; text-align: center; margin: 14px 0; word-break: break-all;
+      cursor: pointer; user-select: all;
+    }
+    .key-output:hover { background: #0a1a0a; }
+    .keys-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .keys-table th { color: #555; font-weight: 600; padding: 6px 8px; border-bottom: 1px solid #2a2a2a; text-align: left; }
+    .keys-table td { padding: 8px; border-bottom: 1px solid #1e1e1e; color: #ccc; }
+    .keys-table tr:last-child td { border-bottom: none; }
+    .tag-active  { color: #00c853; font-size: 0.75rem; }
+    .tag-expired { color: #ff5252; font-size: 0.75rem; }
+
     @media (max-width: 420px) {
       .summary-card .value { font-size: 1rem; }
       .client-info { grid-template-columns: repeat(2, 1fr); }
@@ -315,6 +339,31 @@
   </style>
 </head>
 <body>
+
+<!-- ════════════════════════════════════════════════════
+     SCREEN: LICENÇA
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-license">
+  <div class="auth-wrap">
+    <div class="auth-box">
+      <div class="auth-logo">
+        <div class="icon">🔑</div>
+        <h1>Gestão de Cobranças</h1>
+        <p>Digite sua chave de acesso para continuar</p>
+      </div>
+      <div class="auth-error" id="lic-err"></div>
+      <div class="form-group">
+        <label>Chave de licença</label>
+        <input type="text" id="lic-key" placeholder="GC-XXXXXX-XXXXXX-XXXXXX"
+               style="text-transform:uppercase;letter-spacing:1px;font-family:monospace;"
+               oninput="this.value=this.value.toUpperCase()"
+               onkeydown="if(event.key==='Enter')doActivateLicense()" />
+      </div>
+      <button class="auth-btn" onclick="doActivateLicense()">Ativar</button>
+      <div class="auth-link">Compre sua licença em <strong style="color:#00c853">bene013.github.io/sistema-cobrancas</strong></div>
+    </div>
+  </div>
+</div>
 
 <!-- ════════════════════════════════════════════════════
      SCREEN: SETUP (primeira vez)
@@ -437,6 +486,14 @@
   <div class="container">
 
     <div class="admin-section">
+      <div class="admin-section-title">
+        🔑 Licenças Vendidas
+        <button class="btn btn-sm btn-green" style="margin-left:12px;float:right;" onclick="openKeyGenModal()">+ Gerar Chave</button>
+      </div>
+      <div id="admin-keys-list"></div>
+    </div>
+
+    <div class="admin-section">
       <div class="admin-section-title">💼 Financeiro Geral</div>
       <div class="admin-grid" id="admin-fin-grid"></div>
     </div>
@@ -464,6 +521,37 @@
 <!-- ════════════════════════════════════════════════════
      MODALS
 ════════════════════════════════════════════════════ -->
+
+<!-- Key Generator -->
+<div class="modal-overlay" id="modal-keygen">
+  <div class="modal" style="max-width:420px;">
+    <h2 style="color:#00c853;">🔑 Gerar Chave de Licença</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nome do cliente</label>
+        <input type="text" id="kg-nome" placeholder="Ex: João Silva" />
+      </div>
+      <div class="form-group">
+        <label>Duração</label>
+        <select id="kg-meses">
+          <option value="1">1 mês</option>
+          <option value="3">3 meses</option>
+          <option value="6">6 meses</option>
+          <option value="12" selected>12 meses (1 ano)</option>
+          <option value="999">Vitalício</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-green" style="width:100%;margin-bottom:4px;" onclick="gerarChave()">⚡ Gerar Chave</button>
+    <div id="kg-result" style="display:none;">
+      <div class="key-output" id="kg-key" onclick="copiarChave()" title="Clique para copiar"></div>
+      <p style="font-size:0.75rem;color:#555;text-align:center;">Clique na chave para copiar · Válida até <span id="kg-expiry"></span></p>
+    </div>
+    <div class="modal-actions" style="margin-top:8px;">
+      <button class="btn btn-gray" onclick="closeModal('modal-keygen')">Fechar</button>
+    </div>
+  </div>
+</div>
 
 <!-- Admin login -->
 <div class="modal-overlay" id="modal-admin-login">
@@ -697,6 +785,151 @@ function maskCPF(el) {
   el.value=v;
 }
 
+// ─── LICENÇA ─────────────────────────────────────────────────────────────────
+// Mude esta string para qualquer coisa — é sua assinatura secreta
+const _SALT = 'gc-marcos-cobrancas-2024';
+
+function _hash(str) {
+  let h = 5381;
+  for(let i=0; i<str.length; i++) h = ((h<<5)+h) ^ str.charCodeAt(i);
+  return (h >>> 0).toString(36);
+}
+
+// Gera chave: GC-{base64url(nome:expiry:sig)}
+function gerarLicenca(nomeCliente, meses) {
+  const exp = meses >= 999
+    ? '2099-12-31'
+    : (() => { const d=new Date(); d.setMonth(d.getMonth()+meses); return d.toISOString().split('T')[0]; })();
+  const slug = nomeCliente.trim().toLowerCase().replace(/\s+/g,'-');
+  const sig  = _hash(slug + exp + _SALT);
+  const raw  = btoa(slug + '|' + exp + '|' + sig).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+  // Formata em grupos de 6
+  const chunks = raw.match(/.{1,6}/g)||[];
+  return 'GC-' + chunks.join('-');
+}
+
+// Valida chave — retorna {ok, nome, expiry} ou {ok:false}
+function validarLicenca(key) {
+  try {
+    const raw = key.replace(/^GC-/i,'').replace(/-/g,'');
+    const dec = atob(raw.replace(/-/g,'+').replace(/_/g,'/'));
+    const [slug, exp, sig] = dec.split('|');
+    if(!slug||!exp||!sig) return {ok:false};
+    const expected = _hash(slug + exp + _SALT);
+    if(sig !== expected) return {ok:false};
+    const expired = new Date(exp) < new Date(todayStr());
+    return {ok:!expired, nome:slug, expiry:exp, expired};
+  } catch(e) { return {ok:false}; }
+}
+
+function doActivateLicense() {
+  const key = document.getElementById('lic-key').value.trim().toUpperCase();
+  const err = document.getElementById('lic-err');
+  const res = validarLicenca(key);
+  if(res.expired) { showErr(err, `Licença expirada em ${formatDate(res.expiry)}. Renove para continuar.`); return; }
+  if(!res.ok)     { showErr(err, 'Chave inválida. Verifique e tente novamente.'); return; }
+  // Salva licença localmente
+  localStorage.setItem('gc_license', JSON.stringify({key, nome:res.nome, expiry:res.expiry, activatedAt:todayStr()}));
+  err.style.display='none';
+  afterLicenseOk();
+}
+
+function checkLicense() {
+  try {
+    const stored = JSON.parse(localStorage.getItem('gc_license')||'null');
+    if(!stored) return false;
+    const res = validarLicenca(stored.key);
+    return res.ok;
+  } catch(e) { return false; }
+}
+
+function getLicenseInfo() {
+  try { return JSON.parse(localStorage.getItem('gc_license')||'null'); } catch(e){ return null; }
+}
+
+function afterLicenseOk() {
+  if(!data.auth.senha) showScreen('screen-setup');
+  else showScreen('screen-login');
+}
+
+// ── Gerador de chaves (admin) ──
+function openKeyGenModal() {
+  document.getElementById('kg-nome').value = '';
+  document.getElementById('kg-result').style.display = 'none';
+  openModal('modal-keygen');
+}
+
+function gerarChave() {
+  const nome  = document.getElementById('kg-nome').value.trim();
+  const meses = parseInt(document.getElementById('kg-meses').value);
+  if(!nome) { toast('⚠️ Informe o nome do cliente',true); return; }
+  const chave  = gerarLicenca(nome, meses);
+  const expiry = meses>=999 ? '2099-12-31'
+    : (() => { const d=new Date(); d.setMonth(d.getMonth()+meses); return d.toISOString().split('T')[0]; })();
+
+  document.getElementById('kg-key').textContent    = chave;
+  document.getElementById('kg-expiry').textContent = formatDate(expiry);
+  document.getElementById('kg-result').style.display = 'block';
+
+  // Salva no registro de chaves emitidas
+  if(!data.licencas) data.licencas = [];
+  // Evita duplicata
+  if(!data.licencas.find(l=>l.key===chave)) {
+    data.licencas.push({key:chave, nome, meses, expiry, emitidaEm:todayStr()});
+    save();
+    renderAdminKeys();
+  }
+}
+
+function copiarChave() {
+  const txt = document.getElementById('kg-key').textContent;
+  navigator.clipboard.writeText(txt).then(()=>toast('📋 Chave copiada!')).catch(()=>{
+    // fallback
+    const el = document.getElementById('kg-key');
+    const range = document.createRange(); range.selectNode(el);
+    window.getSelection().removeAllRanges(); window.getSelection().addRange(range);
+    document.execCommand('copy'); toast('📋 Chave copiada!');
+  });
+}
+
+function revogarLicenca(key) {
+  if(!confirm('Revogar esta licença? O cliente não conseguirá mais acessar.')) return;
+  data.licencas = (data.licencas||[]).filter(l=>l.key!==key);
+  save(); renderAdminKeys(); toast('🔒 Licença revogada');
+}
+
+function renderAdminKeys() {
+  if(!data.licencas) data.licencas=[];
+  const el = document.getElementById('admin-keys-list');
+  if(!el) return;
+  const lista = [...data.licencas].sort((a,b)=>b.emitidaEm.localeCompare(a.emitidaEm));
+  if(!lista.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:20px"><div class="icon">🔑</div><div>Nenhuma licença emitida ainda</div></div>';
+    return;
+  }
+  el.innerHTML = `<table class="keys-table">
+    <thead><tr>
+      <th>Cliente</th><th>Validade</th><th>Status</th><th></th>
+    </tr></thead>
+    <tbody>
+    ${lista.map(l=>{
+      const expired = new Date(l.expiry) < new Date(todayStr()) && l.meses < 999;
+      const status  = expired
+        ? '<span class="tag-expired">❌ Expirada</span>'
+        : l.meses>=999
+          ? '<span class="tag-active">✅ Vitalício</span>'
+          : `<span class="tag-active">✅ Até ${formatDate(l.expiry)}</span>`;
+      return `<tr>
+        <td><strong>${l.nome}</strong><br><span style="font-size:0.7rem;color:#555;font-family:monospace;">${l.key.slice(0,14)}…</span></td>
+        <td>${l.meses>=999?'Vitalício':formatDate(l.expiry)}</td>
+        <td>${status}</td>
+        <td><button class="btn btn-red btn-sm" onclick="revogarLicenca('${l.key}')">Revogar</button></td>
+      </tr>`;
+    }).join('')}
+    </tbody>
+  </table>`;
+}
+
 // ─── AUTH ────────────────────────────────────────────────────────────────────
 let adminUnlocked = false;
 
@@ -737,6 +970,12 @@ function enterApp() {
   showScreen('screen-app');
   document.getElementById('today-date').textContent =
     new Date().toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});
+  // Mostra aviso se licença vence em ≤ 30 dias
+  const lic = getLicenseInfo();
+  if(lic && lic.expiry !== '2099-12-31') {
+    const dias = Math.ceil((new Date(lic.expiry) - new Date(todayStr())) / 86400000);
+    if(dias <= 30) toast(`⚠️ Licença vence em ${dias} dia${dias!==1?'s':''}!`, true);
+  }
   render();
 }
 
@@ -819,6 +1058,7 @@ function renderAdmin() {
   </div>`).join('');
 
   renderExpenses();
+  renderAdminKeys();
 }
 
 function renderExpenses() {
@@ -1323,15 +1563,17 @@ function toast(msg, warn=false) {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 (function init() {
-  // Migrate old data without auth block
-  if(!data.auth) data.auth = { senha: null, senhaAdmin: null };
+  if(!data.auth)     data.auth     = { senha: null, senhaAdmin: null };
   if(!data.despesas) data.despesas = [];
+  if(!data.licencas) data.licencas = [];
 
-  if(!data.auth.senha) {
-    showScreen('screen-setup');
-  } else {
-    showScreen('screen-login');
+  // 1. Verifica licença
+  if(!checkLicense()) {
+    showScreen('screen-license');
+    return;
   }
+  // 2. Licença ok → setup ou login
+  afterLicenseOk();
 })();
 </script>
 </body>
