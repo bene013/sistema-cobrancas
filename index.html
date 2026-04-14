@@ -716,6 +716,15 @@
         <input type="password" id="s-admin-pw" placeholder="Deixe em branco para manter" />
       </div>
     </div>
+    <div class="section-divider">Dados</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:4px;">
+      <button class="btn btn-blue" style="flex:1;" onclick="exportarDados()">📤 Exportar backup</button>
+      <label class="btn btn-orange" style="flex:1;cursor:pointer;justify-content:center;">
+        📥 Importar backup
+        <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importarDados(this)" />
+      </label>
+    </div>
+    <small style="color:#555;font-size:0.73rem;">Exportar salva um arquivo .json · Importar substitui TODOS os dados atuais</small>
     <div class="modal-actions">
       <button class="btn btn-gray"  onclick="closeModal('modal-settings')">Cancelar</button>
       <button class="btn btn-green" onclick="saveSettings()">Salvar</button>
@@ -1544,6 +1553,56 @@ function saveSettings() {
   if(newPw.length>=4)    data.auth.senha      = newPw;
   if(newAdmin.length>=4) data.auth.senhaAdmin = newAdmin;
   save(); closeModal('modal-settings'); toast('✅ Configurações salvas!');
+}
+
+// ─── EXPORT / IMPORT ─────────────────────────────────────────────────────────
+function exportarDados() {
+  const exportData = JSON.stringify(data, null, 2);
+  const blob = new Blob([exportData], {type: 'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const hoje = todayStr();
+  a.href     = url;
+  a.download = `cobrancas-backup-${hoje}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('📤 Backup exportado!');
+}
+
+function importarDados(input) {
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      // Validação básica
+      if(!imported.clients || !Array.isArray(imported.clients)) {
+        toast('⚠️ Arquivo inválido — não parece um backup correto.', true);
+        input.value = '';
+        return;
+      }
+      if(!confirm(`Importar ${imported.clients.length} cliente(s)?\n\nATENÇÃO: os dados atuais serão substituídos.`)) {
+        input.value = '';
+        return;
+      }
+      // Mantém a licença do dispositivo atual, substitui o resto
+      const licAtual = getLicenseInfo();
+      data = imported;
+      if(!data.auth)     data.auth     = { senha: null, senhaAdmin: null };
+      if(!data.despesas) data.despesas = [];
+      if(!data.licencas) data.licencas = [];
+      save();
+      input.value = '';
+      closeModal('modal-settings');
+      toast(`✅ ${imported.clients.length} cliente(s) importados!`);
+      render();
+    } catch(err) {
+      toast('⚠️ Erro ao ler o arquivo.', true);
+      input.value = '';
+    }
+  };
+  reader.readAsText(file);
 }
 
 // ─── MODAL UTILS ─────────────────────────────────────────────────────────────
