@@ -1043,7 +1043,8 @@ function renderClients() {
       </div>
 
       <div class="client-actions">
-        ${active&&!finished?`<button class="btn btn-green btn-sm" onclick="openPartialModal('${c.id}')">✅ Pago</button>`:''}
+        ${active&&!finished?`<button class="btn btn-green btn-sm" onclick="payFull('${c.id}')">✅ Pago</button>`:''}
+        ${active&&!finished?`<button class="btn btn-yellow btn-sm" onclick="openPartialModal('${c.id}')">💛 Parcial</button>`:''}
         ${active&&!paid&&!nopaid&&!finished?`<button class="btn btn-red btn-sm" onclick="markNoPaid('${c.id}')">❌ Não Pago</button>`:''}
         ${(paid||nopaid)&&!finished?`<button class="btn btn-gray btn-sm" onclick="undoToday('${c.id}')">↩️ Desfazer</button>`:''}
         <a class="btn btn-wpp btn-sm" href="${wppLink}" target="_blank">💬 WhatsApp</a>
@@ -1104,6 +1105,19 @@ function openHistory(id) {
 }
 
 // ─── PAYMENT ACTIONS ─────────────────────────────────────────────────────────
+function payFull(id) {
+  const c = data.clients.find(x=>x.id===id);
+  if(!c) return;
+  const already = getTodayPaid(c);
+  const rest    = Math.max(0, c.parcelaDiaria - already);
+  if(rest <= 0.01) { toast(`⚠️ ${c.nome} já pagou a parcela completa hoje!`, true); return; }
+  if(!c.pagamentos) c.pagamentos = [];
+  c.faltas = (c.faltas||[]).filter(d=>d!==todayStr());
+  c.pagamentos.push({data: todayStr(), valor: rest});
+  toast(`✅ ${c.nome} — ${fm(c.parcelaDiaria)} registrado!`);
+  save(); render();
+}
+
 function openPartialModal(id) {
   const c = data.clients.find(x=>x.id===id);
   if(!c) return;
